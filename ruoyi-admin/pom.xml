@@ -73,6 +73,12 @@
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
+        <!-- 订单管理模块 -->
+        <dependency>
+        <groupId>com.ruoyi</groupId>
+        <artifactId>order</artifactId>
+    </dependency>
+
     </dependencies>
 
     <build>
