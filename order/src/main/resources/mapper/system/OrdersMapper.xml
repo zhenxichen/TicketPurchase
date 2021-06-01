@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.system.mapper.OrderMapper">
+<mapper namespace="com.ruoyi.system.mapper.OrdersMapper">
     
-    <resultMap type="Order" id="OrderResult">
+    <resultMap type="Orders" id="OrdersResult">
         <result property="orderId"    column="order_id"    />
         <result property="userId"    column="user_id"    />
         <result property="status"    column="status"    />
@@ -12,12 +12,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="date"    column="date"    />
     </resultMap>
 
-    <sql id="selectOrderVo">
-        select order_id, user_id, status, bus, date from order
+    <sql id="selectOrdersVo">
+        select order_id, user_id, status, bus, date from orders
     </sql>
 
-    <select id="selectOrderList" parameterType="Order" resultMap="OrderResult">
-        <include refid="selectOrderVo"/>
+    <select id="selectOrdersList" parameterType="Orders" resultMap="OrdersResult">
+        <include refid="selectOrdersVo"/>
         <where>  
             <if test="orderId != null "> and order_id = #{orderId}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
@@ -27,13 +27,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectOrderById" parameterType="Long" resultMap="OrderResult">
-        <include refid="selectOrderVo"/>
+    <select id="selectOrdersById" parameterType="Long" resultMap="OrdersResult">
+        <include refid="selectOrdersVo"/>
         where order_id = #{orderId}
     </select>
         
-    <insert id="insertOrder" parameterType="Order">
-        insert into order
+    <insert id="insertOrders" parameterType="Orders">
+        insert into orders
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderId != null">order_id,</if>
             <if test="userId != null">user_id,</if>
@@ -50,8 +50,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateOrder" parameterType="Order">
-        update order
+    <update id="updateOrders" parameterType="Orders">
+        update orders
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
             <if test="status != null and status != ''">status = #{status},</if>
@@ -61,12 +61,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where order_id = #{orderId}
     </update>
 
-    <delete id="deleteOrderById" parameterType="Long">
-        delete from order where order_id = #{orderId}
+    <delete id="deleteOrdersById" parameterType="Long">
+        delete from orders where order_id = #{orderId}
     </delete>
 
-    <delete id="deleteOrderByIds" parameterType="String">
-        delete from order where order_id in 
+    <delete id="deleteOrdersByIds" parameterType="String">
+        delete from orders where order_id in 
         <foreach item="orderId" collection="array" open="(" separator="," close=")">
             #{orderId}
         </foreach>

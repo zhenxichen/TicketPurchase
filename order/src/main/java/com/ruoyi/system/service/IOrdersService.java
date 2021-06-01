@@ -1,15 +1,15 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
-import com.ruoyi.system.domain.Order;
+import com.ruoyi.system.domain.Orders;
 
 /**
  * 订单Service接口
  * 
  * @author ruoyi
- * @date 2021-05-31
+ * @date 2021-06-01
  */
-public interface IOrderService 
+public interface IOrdersService 
 {
     /**
      * 查询订单
@@ -17,31 +17,31 @@ public interface IOrderService
      * @param orderId 订单ID
      * @return 订单
      */
-    public Order selectOrderById(Long orderId);
+    public Orders selectOrdersById(Long orderId);
 
     /**
      * 查询订单列表
      * 
-     * @param order 订单
+     * @param orders 订单
      * @return 订单集合
      */
-    public List<Order> selectOrderList(Order order);
+    public List<Orders> selectOrdersList(Orders orders);
 
     /**
      * 新增订单
      * 
-     * @param order 订单
+     * @param orders 订单
      * @return 结果
      */
-    public int insertOrder(Order order);
+    public int insertOrders(Orders orders);
 
     /**
      * 修改订单
      * 
-     * @param order 订单
+     * @param orders 订单
      * @return 结果
      */
-    public int updateOrder(Order order);
+    public int updateOrders(Orders orders);
 
     /**
      * 批量删除订单
@@ -49,7 +49,7 @@ public interface IOrderService
      * @param orderIds 需要删除的订单ID
      * @return 结果
      */
-    public int deleteOrderByIds(Long[] orderIds);
+    public int deleteOrdersByIds(Long[] orderIds);
 
     /**
      * 删除订单信息
@@ -57,5 +57,5 @@ public interface IOrderService
      * @param orderId 订单ID
      * @return 结果
      */
-    public int deleteOrderById(Long orderId);
+    public int deleteOrdersById(Long orderId);
 }

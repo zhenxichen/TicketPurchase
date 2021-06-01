@@ -55,7 +55,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:order:add']"
+          v-hasPermi="['system:orders:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -66,7 +66,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:order:edit']"
+          v-hasPermi="['system:orders:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -77,7 +77,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:order:remove']"
+          v-hasPermi="['system:orders:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -88,13 +88,13 @@
           size="mini"
 		  :loading="exportLoading"
           @click="handleExport"
-          v-hasPermi="['system:order:export']"
+          v-hasPermi="['system:orders:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="ordersList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="订单号" align="center" prop="orderId" />
       <el-table-column label="用户ID" align="center" prop="userId" />
@@ -112,14 +112,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:order:edit']"
+            v-hasPermi="['system:orders:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:order:remove']"
+            v-hasPermi="['system:orders:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -168,10 +168,10 @@
 </template>
 
 <script>
-import { listOrder, getOrder, delOrder, addOrder, updateOrder, exportOrder } from "@/api/system/order";
+import { listOrders, getOrders, delOrders, addOrders, updateOrders, exportOrders } from "@/api/system/orders";
 
 export default {
-  name: "Order",
+  name: "Orders",
   components: {
   },
   data() {
@@ -191,7 +191,7 @@ export default {
       // 总条数
       total: 0,
       // 订单表格数据
-      orderList: [],
+      ordersList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -235,8 +235,8 @@ export default {
     /** 查询订单列表 */
     getList() {
       this.loading = true;
-      listOrder(this.queryParams).then(response => {
-        this.orderList = response.rows;
+      listOrders(this.queryParams).then(response => {
+        this.ordersList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -283,7 +283,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const orderId = row.orderId || this.ids
-      getOrder(orderId).then(response => {
+      getOrders(orderId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改订单";
@@ -294,13 +294,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.orderId != null) {
-            updateOrder(this.form).then(response => {
+            updateOrders(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addOrder(this.form).then(response => {
+            addOrders(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -317,7 +317,7 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delOrder(orderIds);
+          return delOrders(orderIds);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
@@ -332,7 +332,7 @@ export default {
           type: "warning"
         }).then(() => {
           this.exportLoading = true;
-          return exportOrder(queryParams);
+          return exportOrders(queryParams);
         }).then(response => {
           this.download(response.msg);
           this.exportLoading = false;

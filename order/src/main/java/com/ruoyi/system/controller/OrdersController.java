@@ -15,8 +15,8 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.Order;
-import com.ruoyi.system.service.IOrderService;
+import com.ruoyi.system.domain.Orders;
+import com.ruoyi.system.service.IOrdersService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -24,80 +24,80 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 订单Controller
  * 
  * @author ruoyi
- * @date 2021-05-31
+ * @date 2021-06-01
  */
 @RestController
-@RequestMapping("/system/order")
-public class OrderController extends BaseController
+@RequestMapping("/system/orders")
+public class OrdersController extends BaseController
 {
     @Autowired
-    private IOrderService orderService;
+    private IOrdersService ordersService;
 
     /**
      * 查询订单列表
      */
-    @PreAuthorize("@ss.hasPermi('system:order:list')")
+    @PreAuthorize("@ss.hasPermi('system:orders:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Order order)
+    public TableDataInfo list(Orders orders)
     {
         startPage();
-        List<Order> list = orderService.selectOrderList(order);
+        List<Orders> list = ordersService.selectOrdersList(orders);
         return getDataTable(list);
     }
 
     /**
      * 导出订单列表
      */
-    @PreAuthorize("@ss.hasPermi('system:order:export')")
+    @PreAuthorize("@ss.hasPermi('system:orders:export')")
     @Log(title = "订单", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(Order order)
+    public AjaxResult export(Orders orders)
     {
-        List<Order> list = orderService.selectOrderList(order);
-        ExcelUtil<Order> util = new ExcelUtil<Order>(Order.class);
+        List<Orders> list = ordersService.selectOrdersList(orders);
+        ExcelUtil<Orders> util = new ExcelUtil<Orders>(Orders.class);
         return util.exportExcel(list, "订单数据");
     }
 
     /**
      * 获取订单详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:order:query')")
+    @PreAuthorize("@ss.hasPermi('system:orders:query')")
     @GetMapping(value = "/{orderId}")
     public AjaxResult getInfo(@PathVariable("orderId") Long orderId)
     {
-        return AjaxResult.success(orderService.selectOrderById(orderId));
+        return AjaxResult.success(ordersService.selectOrdersById(orderId));
     }
 
     /**
      * 新增订单
      */
-    @PreAuthorize("@ss.hasPermi('system:order:add')")
+    @PreAuthorize("@ss.hasPermi('system:orders:add')")
     @Log(title = "订单", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Order order)
+    public AjaxResult add(@RequestBody Orders orders)
     {
-        return toAjax(orderService.insertOrder(order));
+        return toAjax(ordersService.insertOrders(orders));
     }
 
     /**
      * 修改订单
      */
-    @PreAuthorize("@ss.hasPermi('system:order:edit')")
+    @PreAuthorize("@ss.hasPermi('system:orders:edit')")
     @Log(title = "订单", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Order order)
+    public AjaxResult edit(@RequestBody Orders orders)
     {
-        return toAjax(orderService.updateOrder(order));
+        return toAjax(ordersService.updateOrders(orders));
     }
 
     /**
      * 删除订单
      */
-    @PreAuthorize("@ss.hasPermi('system:order:remove')")
+    @PreAuthorize("@ss.hasPermi('system:orders:remove')")
     @Log(title = "订单", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{orderIds}")
     public AjaxResult remove(@PathVariable Long[] orderIds)
     {
-        return toAjax(orderService.deleteOrderByIds(orderIds));
+        return toAjax(ordersService.deleteOrdersByIds(orderIds));
     }
 }

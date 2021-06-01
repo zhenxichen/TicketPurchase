@@ -1,52 +1,52 @@
 import request from '@/utils/request'
 
 // 查询订单列表
-export function listOrder(query) {
+export function listOrders(query) {
   return request({
-    url: '/system/order/list',
+    url: '/system/orders/list',
     method: 'get',
     params: query
   })
 }
 
 // 查询订单详细
-export function getOrder(orderId) {
+export function getOrders(orderId) {
   return request({
-    url: '/system/order/' + orderId,
+    url: '/system/orders/' + orderId,
     method: 'get'
   })
 }
 
 // 新增订单
-export function addOrder(data) {
+export function addOrders(data) {
   return request({
-    url: '/system/order',
+    url: '/system/orders',
     method: 'post',
     data: data
   })
 }
 
 // 修改订单
-export function updateOrder(data) {
+export function updateOrders(data) {
   return request({
-    url: '/system/order',
+    url: '/system/orders',
     method: 'put',
     data: data
   })
 }
 
 // 删除订单
-export function delOrder(orderId) {
+export function delOrders(orderId) {
   return request({
-    url: '/system/order/' + orderId,
+    url: '/system/orders/' + orderId,
     method: 'delete'
   })
 }
 
 // 导出订单
-export function exportOrder(query) {
+export function exportOrders(query) {
   return request({
-    url: '/system/order/export',
+    url: '/system/orders/export',
     method: 'get',
     params: query
   })

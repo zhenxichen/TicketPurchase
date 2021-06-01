@@ -8,12 +8,12 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 订单对象 order
+ * 订单对象 orders
  * 
  * @author ruoyi
- * @date 2021-05-31
+ * @date 2021-06-01
  */
-public class Order extends BaseEntity
+public class Orders extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
