@@ -90,6 +90,11 @@ public class SysUserServiceImpl implements ISysUserService
         return userMapper.selectUserById(userId);
     }
 
+    @Override
+    public SysUser selectUserByPhoneNumber(String phoneNumber) {
+        return userMapper.selectUserByPhoneNumber(phoneNumber);
+    }
+
     /**
      * 查询用户所属角色组
      * 

@@ -6,7 +6,7 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 /**
  * 用户 业务层
  * 
- * @author ruoyi
+ * @author Zhenxi Chen
  */
 public interface ISysUserService
 {
@@ -33,6 +33,13 @@ public interface ISysUserService
      * @return 用户对象信息
      */
     public SysUser selectUserById(Long userId);
+
+    /**
+     * 通过手机号码查询用户
+     * @param phoneNumber 用户手机号码
+     * @return 用户对象信息
+     */
+    public SysUser selectUserByPhoneNumber(String phoneNumber);
 
     /**
      * 根据用户ID查询用户所属角色组

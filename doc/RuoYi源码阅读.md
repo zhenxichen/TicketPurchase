@@ -8,6 +8,7 @@
 + 登录接口通过SysLoginController实现（实现于RuoYi-admin模块中）
 + 鉴权方式为JWT鉴权 实现于JwtAuthenticationTokenFilter（在ruoyi-framework模块中）
 + JWT应存储于请求头的Authorization字段当中，格式为"Bearer " + token
++ 数据库中存储的密码是经过加密的，加密在ruoyi-common模块中的SecurityUtils类的encryptPassword()方法实现
 
 登录的逻辑流程如下：
 1. 以GET方法请求/captchaImage接口，获取验证码图片（base64格式，存储于img字段当中）以及验证码的唯一标识符（字符串，存储于uuid字段中）

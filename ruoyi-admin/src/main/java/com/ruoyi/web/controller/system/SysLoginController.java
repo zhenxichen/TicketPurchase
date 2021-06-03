@@ -2,6 +2,8 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import java.util.Set;
+
+import com.ruoyi.common.core.domain.model.PhoneLoginBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +24,7 @@ import com.ruoyi.system.service.ISysMenuService;
 /**
  * 登录验证
  * 
- * @author ruoyi
+ * @author Zhenxi Chen
  */
 @RestController
 public class SysLoginController
@@ -55,6 +57,21 @@ public class SysLoginController
         ajax.put(Constants.TOKEN, token);
         return ajax;
     }
+
+    /**
+     * 手机号登录方法
+     *
+     * @param loginBody 手机号登录信息
+     * @return 返回的Ajax结构体
+     */
+    @PostMapping("/login/phone")
+    public AjaxResult loginByPhone(@RequestBody PhoneLoginBody loginBody) {
+        AjaxResult ajax = AjaxResult.success();
+        String token = loginService.loginByPhone(loginBody.getPhone(), loginBody.getPassword());
+        ajax.put(Constants.TOKEN, token);
+        return ajax;
+    }
+
 
     /**
      * 获取用户信息
