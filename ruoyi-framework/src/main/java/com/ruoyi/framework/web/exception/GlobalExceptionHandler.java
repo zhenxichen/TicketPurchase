@@ -6,11 +6,13 @@ import com.ruoyi.common.exception.BaseException;
 import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.exception.DemoModeException;
 import com.ruoyi.common.exception.user.PhoneNumberNotExistException;
+import com.ruoyi.common.exception.user.SignUpException;
 import com.ruoyi.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -110,5 +112,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PhoneNumberNotExistException.class)
     public AjaxResult phoneNumberNotExistException(PhoneNumberNotExistException e) {
         return AjaxResult.error("手机号码不存在");
+    }
+
+    /**
+     * 注册异常
+     */
+    @ExceptionHandler(SignUpException.class)
+    public AjaxResult signUpException(SignUpException e) {
+        if (e.getType() == SignUpException.USERNAME_EXISTED) {
+            return AjaxResult.error("用户名已存在");
+        } else if (e.getType() == SignUpException.PHONE_NUMBER_EXISTED) {
+            return AjaxResult.error("手机号已存在");
+        } else {
+            return AjaxResult.error("注册失败");
+        }
     }
 }
