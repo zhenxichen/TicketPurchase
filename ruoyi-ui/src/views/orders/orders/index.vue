@@ -55,7 +55,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:orders:add']"
+          v-hasPermi="['orders:orders:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -66,7 +66,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:orders:edit']"
+          v-hasPermi="['orders:orders:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -77,7 +77,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:orders:remove']"
+          v-hasPermi="['orders:orders:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -88,7 +88,7 @@
           size="mini"
 		  :loading="exportLoading"
           @click="handleExport"
-          v-hasPermi="['system:orders:export']"
+          v-hasPermi="['orders:orders:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -112,14 +112,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:orders:edit']"
+            v-hasPermi="['orders:orders:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:orders:remove']"
+            v-hasPermi="['orders:orders:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -168,7 +168,7 @@
 </template>
 
 <script>
-import { listOrders, getOrders, delOrders, addOrders, updateOrders, exportOrders } from "@/api/system/orders";
+import { listOrders, getOrders, delOrders, addOrders, updateOrders, exportOrders } from "@/api/orders/orders";
 
 export default {
   name: "Orders",
@@ -204,7 +204,7 @@ export default {
         userId: null,
         status: null,
         bus: null,
-        date: null
+        date: null,
       },
       // 表单参数
       form: {},
@@ -224,7 +224,7 @@ export default {
         ],
         date: [
           { required: true, message: "日期不能为空", trigger: "blur" }
-        ]
+        ],
       }
     };
   },
@@ -253,7 +253,8 @@ export default {
         userId: null,
         status: "0",
         bus: null,
-        date: null
+        date: null,
+        createTime: null
       };
       this.resetForm("form");
     },

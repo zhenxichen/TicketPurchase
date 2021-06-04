@@ -2,6 +2,7 @@ package com.ruoyi.framework.web.service;
 
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginRes;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.exception.CustomException;
@@ -12,9 +13,11 @@ import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.MessageUtils;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.UserTypeUtils;
 import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
+import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +27,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 登录校验方法
@@ -43,6 +47,9 @@ public class SysLoginService {
 
     @Autowired
     private ISysUserService userService;
+
+    @Autowired
+    private ISysRoleService roleService;
 
     /**
      * 登录验证
@@ -101,8 +108,9 @@ public class SysLoginService {
      *
      * @param phone    用户绑定的手机号
      * @param password 用户的密码
+     * @return 返回用户类型和token
      */
-    public String loginByPhone(String phone, String password) {
+    public LoginRes loginByPhone(String phone, String password) {
         // 通过手机号获取用户数据
         SysUser user = userService.selectUserByPhoneNumber(phone);
         if (user == null) {
@@ -132,6 +140,9 @@ public class SysLoginService {
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         recordLoginInfo(loginUser.getUser());
         // 生成JWT
-        return tokenService.createToken(loginUser);
+        String token = tokenService.createToken(loginUser);
+        List<Integer> roleIds = roleService.selectRoleListByUserId(user.getUserId());
+        String type = UserTypeUtils.getUserTypeString(roleIds);
+        return new LoginRes(token, type);
     }
 }

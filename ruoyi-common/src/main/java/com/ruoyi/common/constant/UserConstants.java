@@ -3,7 +3,7 @@ package com.ruoyi.common.constant;
 /**
  * 用户常量信息
  * 
- * @author ruoyi
+ * @author Zhenxi Chen
  */
 public class UserConstants
 {
@@ -60,4 +60,15 @@ public class UserConstants
     /** 校验返回结果码 */
     public final static String UNIQUE = "0";
     public final static String NOT_UNIQUE = "1";
+
+    /** 用户类型标识（返回值） */
+    public static final String NORMAL_USER = "0";
+    public static final String EMPLOYEE = "1";
+    public static final String DRIVER = "2";
+
+    /** 用户类型标识（数据库） */
+    public static final int NORMAL_USER_DB = 2;
+    public static final int EMPLOYEE_DB = 100;
+    public static final int DRIVER_DB = 101;
+
 }

@@ -1,15 +1,15 @@
-package com.ruoyi.system.mapper;
+package com.ruoyi.orders.service;
 
 import java.util.List;
-import com.ruoyi.system.domain.Orders;
+import com.ruoyi.orders.domain.Orders;
 
 /**
- * 订单Mapper接口
+ * 订单Service接口
  * 
  * @author ruoyi
- * @date 2021-06-01
+ * @date 2021-06-04
  */
-public interface OrdersMapper 
+public interface IOrdersService 
 {
     /**
      * 查询订单
@@ -44,18 +44,18 @@ public interface OrdersMapper
     public int updateOrders(Orders orders);
 
     /**
-     * 删除订单
+     * 批量删除订单
+     * 
+     * @param orderIds 需要删除的订单ID
+     * @return 结果
+     */
+    public int deleteOrdersByIds(Long[] orderIds);
+
+    /**
+     * 删除订单信息
      * 
      * @param orderId 订单ID
      * @return 结果
      */
     public int deleteOrdersById(Long orderId);
-
-    /**
-     * 批量删除订单
-     * 
-     * @param orderIds 需要删除的数据ID
-     * @return 结果
-     */
-    public int deleteOrdersByIds(Long[] orderIds);
 }

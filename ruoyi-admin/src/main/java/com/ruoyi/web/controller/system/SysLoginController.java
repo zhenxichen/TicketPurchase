@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import java.util.Set;
 
+import com.ruoyi.common.core.domain.model.LoginRes;
 import com.ruoyi.common.core.domain.model.PhoneLoginBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +42,8 @@ public class SysLoginController
     @Autowired
     private TokenService tokenService;
 
+    private static final String USER_TYPE = "userType";
+
     /**
      * 登录方法
      * 
@@ -67,8 +70,9 @@ public class SysLoginController
     @PostMapping("/login/phone")
     public AjaxResult loginByPhone(@RequestBody PhoneLoginBody loginBody) {
         AjaxResult ajax = AjaxResult.success();
-        String token = loginService.loginByPhone(loginBody.getPhone(), loginBody.getPassword());
-        ajax.put(Constants.TOKEN, token);
+        LoginRes res = loginService.loginByPhone(loginBody.getPhone(), loginBody.getPassword());
+        ajax.put(Constants.TOKEN, res.getToken());
+        ajax.put(USER_TYPE, res.getType());
         return ajax;
     }
 

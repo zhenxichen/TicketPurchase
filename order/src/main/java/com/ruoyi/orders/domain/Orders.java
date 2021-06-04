@@ -1,4 +1,4 @@
-package com.ruoyi.system.domain;
+package com.ruoyi.orders.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 订单对象 orders
  * 
  * @author ruoyi
- * @date 2021-06-01
+ * @date 2021-06-04
  */
 public class Orders extends BaseEntity
 {
@@ -92,6 +92,7 @@ public class Orders extends BaseEntity
             .append("status", getStatus())
             .append("bus", getBus())
             .append("date", getDate())
+            .append("createTime", getCreateTime())
             .toString();
     }
 }

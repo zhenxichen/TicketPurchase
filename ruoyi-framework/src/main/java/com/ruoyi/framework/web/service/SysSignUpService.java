@@ -3,7 +3,9 @@ package com.ruoyi.framework.web.service;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.exception.user.SignUpException;
+import com.ruoyi.system.domain.UserInfo;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,9 @@ public class SysSignUpService {
     @Autowired
     private ISysUserService userService;
 
+    @Autowired
+    private IUserInfoService infoService;
+
     /**
      * 进行账号注册
      * @param phoneNumber 手机号
@@ -33,6 +38,10 @@ public class SysSignUpService {
         user.setNickName(username);     // 由于RuoYi自带的用户表结构必须填写nickname，因此使用username代替
         checkSignUpInfoValid(user);     // 校验用户名和手机号是否重复
         userService.insertUser(user);
+        user = userService.selectUserByUserName(username);
+        UserInfo info = new UserInfo();
+        info.setUserId(user.getUserId());
+        infoService.insertUserInfo(info);
     }
 
     /**

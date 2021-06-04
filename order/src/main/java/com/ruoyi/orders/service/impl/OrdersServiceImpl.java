@@ -1,17 +1,18 @@
-package com.ruoyi.system.service.impl;
+package com.ruoyi.orders.service.impl;
 
 import java.util.List;
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.system.mapper.OrdersMapper;
-import com.ruoyi.system.domain.Orders;
-import com.ruoyi.system.service.IOrdersService;
+import com.ruoyi.orders.mapper.OrdersMapper;
+import com.ruoyi.orders.domain.Orders;
+import com.ruoyi.orders.service.IOrdersService;
 
 /**
  * 订单Service业务层处理
  * 
  * @author ruoyi
- * @date 2021-06-01
+ * @date 2021-06-04
  */
 @Service
 public class OrdersServiceImpl implements IOrdersService 
@@ -52,6 +53,7 @@ public class OrdersServiceImpl implements IOrdersService
     @Override
     public int insertOrders(Orders orders)
     {
+        orders.setCreateTime(DateUtils.getNowDate());
         return ordersMapper.insertOrders(orders);
     }
 
