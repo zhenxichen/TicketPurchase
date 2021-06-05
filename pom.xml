@@ -223,6 +223,13 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- 车次管理模块 -->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>bus</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -234,6 +241,7 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>order</module>
+        <module>bus</module>
     </modules>
     <packaging>pom</packaging>
 

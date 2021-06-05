@@ -7,7 +7,7 @@ import com.ruoyi.orders.domain.Orders;
  * 订单Mapper接口
  * 
  * @author ruoyi
- * @date 2021-06-04
+ * @date 2021-06-05
  */
 public interface OrdersMapper 
 {

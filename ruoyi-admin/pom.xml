@@ -75,9 +75,15 @@
 
         <!-- 订单管理模块 -->
         <dependency>
-        <groupId>com.ruoyi</groupId>
-        <artifactId>order</artifactId>
-    </dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>order</artifactId>
+        </dependency>
+
+        <!-- 车次管理模块 -->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>bus</artifactId>
+        </dependency>
 
     </dependencies>
 

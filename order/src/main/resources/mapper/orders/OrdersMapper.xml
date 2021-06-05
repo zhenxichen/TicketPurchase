@@ -11,10 +11,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="bus"    column="bus"    />
         <result property="date"    column="date"    />
         <result property="createTime"    column="create_time"    />
+        <result property="verifyTime"    column="verify_time"    />
     </resultMap>
 
     <sql id="selectOrdersVo">
-        select order_id, user_id, status, bus, date, create_time from orders
+        select order_id, user_id, status, bus, date, create_time, verify_time from orders
     </sql>
 
     <select id="selectOrdersList" parameterType="Orders" resultMap="OrdersResult">
@@ -25,6 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="bus != null  and bus != ''"> and bus = #{bus}</if>
             <if test="date != null "> and date = #{date}</if>
+            <if test="verifyTime != null "> and verify_time = #{verifyTime}</if>
         </where>
     </select>
     
@@ -42,6 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bus != null and bus != ''">bus,</if>
             <if test="date != null">date,</if>
             <if test="createTime != null">create_time,</if>
+            <if test="verifyTime != null">verify_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null">#{orderId},</if>
@@ -50,6 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bus != null and bus != ''">#{bus},</if>
             <if test="date != null">#{date},</if>
             <if test="createTime != null">#{createTime},</if>
+            <if test="verifyTime != null">#{verifyTime},</if>
          </trim>
     </insert>
 
@@ -61,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bus != null and bus != ''">bus = #{bus},</if>
             <if test="date != null">date = #{date},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="verifyTime != null">verify_time = #{verifyTime},</if>
         </trim>
         where order_id = #{orderId}
     </update>

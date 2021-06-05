@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bus.mapper.BusMapper">
+    
+    <resultMap type="Bus" id="BusResult">
+        <result property="busId"    column="bus_id"    />
+        <result property="start"    column="start"    />
+        <result property="dest"    column="dest"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="day"    column="day"    />
+        <result property="seat"    column="seat"    />
+    </resultMap>
+
+    <sql id="selectBusVo">
+        select bus_id, start, dest, start_time, end_time, day, seat from bus
+    </sql>
+
+    <select id="selectBusList" parameterType="Bus" resultMap="BusResult">
+        <include refid="selectBusVo"/>
+        <where>  
+            <if test="start != null "> and start = #{start}</if>
+            <if test="dest != null "> and dest = #{dest}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="day != null "> and day = #{day}</if>
+            <if test="seat != null "> and seat = #{seat}</if>
+        </where>
+    </select>
+    
+    <select id="selectBusById" parameterType="String" resultMap="BusResult">
+        <include refid="selectBusVo"/>
+        where bus_id = #{busId}
+    </select>
+        
+    <insert id="insertBus" parameterType="Bus">
+        insert into bus
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="busId != null">bus_id,</if>
+            <if test="start != null">start,</if>
+            <if test="dest != null">dest,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="day != null">day,</if>
+            <if test="seat != null">seat,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="busId != null">#{busId},</if>
+            <if test="start != null">#{start},</if>
+            <if test="dest != null">#{dest},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="day != null">#{day},</if>
+            <if test="seat != null">#{seat},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBus" parameterType="Bus">
+        update bus
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="start != null">start = #{start},</if>
+            <if test="dest != null">dest = #{dest},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="day != null">day = #{day},</if>
+            <if test="seat != null">seat = #{seat},</if>
+        </trim>
+        where bus_id = #{busId}
+    </update>
+
+    <delete id="deleteBusById" parameterType="String">
+        delete from bus where bus_id = #{busId}
+    </delete>
+
+    <delete id="deleteBusByIds" parameterType="String">
+        delete from bus where bus_id in 
+        <foreach item="busId" collection="array" open="(" separator="," close=")">
+            #{busId}
+        </foreach>
+    </delete>
+</mapper>

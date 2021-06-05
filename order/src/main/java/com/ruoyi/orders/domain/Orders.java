@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 订单对象 orders
  * 
  * @author ruoyi
- * @date 2021-06-04
+ * @date 2021-06-05
  */
 public class Orders extends BaseEntity
 {
@@ -37,6 +37,11 @@ public class Orders extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date date;
+
+    /** 核销时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "核销时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date verifyTime;
 
     public void setOrderId(Long orderId) 
     {
@@ -83,6 +88,15 @@ public class Orders extends BaseEntity
     {
         return date;
     }
+    public void setVerifyTime(Date verifyTime) 
+    {
+        this.verifyTime = verifyTime;
+    }
+
+    public Date getVerifyTime() 
+    {
+        return verifyTime;
+    }
 
     @Override
     public String toString() {
@@ -93,6 +107,7 @@ public class Orders extends BaseEntity
             .append("bus", getBus())
             .append("date", getDate())
             .append("createTime", getCreateTime())
+            .append("verifyTime", getVerifyTime())
             .toString();
     }
 }
