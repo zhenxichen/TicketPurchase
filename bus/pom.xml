@@ -12,9 +12,15 @@
     <artifactId>bus</artifactId>
 
     <dependencies>
+        <!-- RuoYi通用功能 -->
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-common</artifactId>
+        </dependency>
+        <!-- RuoYi框架 -->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-framework</artifactId>
         </dependency>
     </dependencies>
 

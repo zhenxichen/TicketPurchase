@@ -6,7 +6,7 @@ import com.ruoyi.bus.domain.Bus;
 /**
  * 车次管理Mapper接口
  * 
- * @author Zhenxi Chen
+ * @author ruoyi
  * @date 2021-06-05
  */
 public interface BusMapper 
@@ -17,7 +17,7 @@ public interface BusMapper
      * @param busId 车次管理ID
      * @return 车次管理
      */
-    Bus selectBusById(String busId);
+    public Bus selectBusById(String busId);
 
     /**
      * 查询车次管理列表

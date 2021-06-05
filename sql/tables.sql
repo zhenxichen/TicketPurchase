@@ -63,10 +63,12 @@ CREATE TABLE `tickets` (
 -- 建立订单表
 -- -----------------
 CREATE TABLE `orders` (
-  `order_id` bigint(64) NOT NULL COMMENT '订单号',
+  `order_id` varchar(64) NOT NULL COMMENT '订单号',
   `user_id` bigint(20) NOT NULL COMMENT '用户ID',
   `status` char(1) NOT NULL DEFAULT '' COMMENT '订单状态（0待支付 1待核销 2已完成 3已关闭）',
   `bus` varchar(20) NOT NULL DEFAULT '' COMMENT '车次',
   `date` date NOT NULL COMMENT '日期',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '订单创建时间'
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '订单创建时间',
+  `verify_time` datetime DEFAULT NULL COMMENT '核销时间',
+  PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表'

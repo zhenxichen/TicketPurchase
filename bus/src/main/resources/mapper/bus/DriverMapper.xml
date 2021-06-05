@@ -3,9 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.bus.mapper.DriverMapper">
-    <resultMap id="TodayBusResult" type="TodayBus">
-        
-    </resultMap>
     
     <select id="selectCurrVerifyCount" parameterType="java.lang.String" resultType="java.lang.Integer">
         select count(*) from orders
@@ -19,5 +16,10 @@
         where `bus` = #{busId, jdbcType=VARCHAR}
             and `date` = curdate()
             and (`status` = '1' or `status` = '2')
+    </select>
+
+    <select id="checkOrderStatus" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from orders
+        where `order_id` = #{orderId, jdbcType=BIGINT}
     </select>
 </mapper>
