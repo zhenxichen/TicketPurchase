@@ -31,6 +31,4 @@ public interface IDriverService {
      * @return
      */
     VerifyNumberDTO getVerifyCount(String busId);
-
-    boolean checkOrderId
 }
