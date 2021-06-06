@@ -11,15 +11,14 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 订单对象 orders
  * 
  * @author ruoyi
- * @date 2021-06-05
+ * @date 2021-06-06
  */
 public class Orders extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 订单号 */
-    @Excel(name = "订单号")
-    private Long orderId;
+    private String orderId;
 
     /** 用户ID */
     @Excel(name = "用户ID")
@@ -43,12 +42,12 @@ public class Orders extends BaseEntity
     @Excel(name = "核销时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date verifyTime;
 
-    public void setOrderId(Long orderId) 
+    public void setOrderId(String orderId) 
     {
         this.orderId = orderId;
     }
 
-    public Long getOrderId() 
+    public String getOrderId() 
     {
         return orderId;
     }

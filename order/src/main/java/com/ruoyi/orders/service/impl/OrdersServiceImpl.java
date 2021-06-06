@@ -12,7 +12,7 @@ import com.ruoyi.orders.service.IOrdersService;
  * 订单Service业务层处理
  * 
  * @author ruoyi
- * @date 2021-06-05
+ * @date 2021-06-06
  */
 @Service
 public class OrdersServiceImpl implements IOrdersService 
@@ -27,7 +27,7 @@ public class OrdersServiceImpl implements IOrdersService
      * @return 订单
      */
     @Override
-    public Orders selectOrdersById(Long orderId)
+    public Orders selectOrdersById(String orderId)
     {
         return ordersMapper.selectOrdersById(orderId);
     }
@@ -76,7 +76,7 @@ public class OrdersServiceImpl implements IOrdersService
      * @return 结果
      */
     @Override
-    public int deleteOrdersByIds(Long[] orderIds)
+    public int deleteOrdersByIds(String[] orderIds)
     {
         return ordersMapper.deleteOrdersByIds(orderIds);
     }
@@ -88,7 +88,7 @@ public class OrdersServiceImpl implements IOrdersService
      * @return 结果
      */
     @Override
-    public int deleteOrdersById(Long orderId)
+    public int deleteOrdersById(String orderId)
     {
         return ordersMapper.deleteOrdersById(orderId);
     }

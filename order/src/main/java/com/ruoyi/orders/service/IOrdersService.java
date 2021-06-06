@@ -7,7 +7,7 @@ import com.ruoyi.orders.domain.Orders;
  * 订单Service接口
  * 
  * @author ruoyi
- * @date 2021-06-05
+ * @date 2021-06-06
  */
 public interface IOrdersService 
 {
@@ -17,7 +17,7 @@ public interface IOrdersService
      * @param orderId 订单ID
      * @return 订单
      */
-    public Orders selectOrdersById(Long orderId);
+    public Orders selectOrdersById(String orderId);
 
     /**
      * 查询订单列表
@@ -49,7 +49,7 @@ public interface IOrdersService
      * @param orderIds 需要删除的订单ID
      * @return 结果
      */
-    public int deleteOrdersByIds(Long[] orderIds);
+    public int deleteOrdersByIds(String[] orderIds);
 
     /**
      * 删除订单信息
@@ -57,5 +57,5 @@ public interface IOrdersService
      * @param orderId 订单ID
      * @return 结果
      */
-    public int deleteOrdersById(Long orderId);
+    public int deleteOrdersById(String orderId);
 }

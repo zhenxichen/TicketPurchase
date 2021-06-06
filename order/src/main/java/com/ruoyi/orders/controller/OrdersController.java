@@ -23,8 +23,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 /**
  * 订单Controller
  * 
- * @author Zhenxi Chen
- * @date 2021-06-05
+ * @author ruoyi
+ * @date 2021-06-06
  */
 @RestController
 @RequestMapping("/orders/orders")
@@ -63,7 +63,7 @@ public class OrdersController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('orders:orders:query')")
     @GetMapping(value = "/{orderId}")
-    public AjaxResult getInfo(@PathVariable("orderId") Long orderId)
+    public AjaxResult getInfo(@PathVariable("orderId") String orderId)
     {
         return AjaxResult.success(ordersService.selectOrdersById(orderId));
     }
@@ -96,7 +96,7 @@ public class OrdersController extends BaseController
     @PreAuthorize("@ss.hasPermi('orders:orders:remove')")
     @Log(title = "订单", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{orderIds}")
-    public AjaxResult remove(@PathVariable Long[] orderIds)
+    public AjaxResult remove(@PathVariable String[] orderIds)
     {
         return toAjax(ordersService.deleteOrdersByIds(orderIds));
     }
