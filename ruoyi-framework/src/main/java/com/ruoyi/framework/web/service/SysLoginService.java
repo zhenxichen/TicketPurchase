@@ -17,13 +17,17 @@ import com.ruoyi.common.utils.UserTypeUtils;
 import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
+import com.ruoyi.system.domain.UserInfo;
+import com.ruoyi.system.domain.UserOpenIdDTO;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -50,6 +54,12 @@ public class SysLoginService {
 
     @Autowired
     private ISysRoleService roleService;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private IUserInfoService userInfoService;
 
     /**
      * 登录验证
@@ -144,5 +154,18 @@ public class SysLoginService {
         List<Integer> roleIds = roleService.selectRoleListByUserId(user.getUserId());
         String type = UserTypeUtils.getUserTypeString(roleIds);
         return new LoginRes(token, type);
+    }
+
+    /**
+     * 通过微信openid进行登录
+     *
+     * @param openid 微信openid
+     * @return
+     */
+    public LoginRes loginByWechat(String openid) {
+        UserOpenIdDTO dto = userInfoService.selectUsernameByOpenId(openid);
+        LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(dto.getUsername());
+        String token = tokenService.createToken(loginUser);
+        return null;
     }
 }
