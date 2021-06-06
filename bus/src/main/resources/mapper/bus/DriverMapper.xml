@@ -3,6 +3,23 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.bus.mapper.DriverMapper">
+
+    <resultMap id="verifyRecordResult" type="com.ruoyi.bus.domain.dto.VerifyDTO">
+        <result property="orderID" column="order_id" />
+        <result property="username" column="user_name" />
+        <result property="busID" column="bus_id" />
+        <result property="busDate" column="bus_date" jdbcType="DATE" />
+        <result property="verifyTime" column="verify_time" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <resultMap id="todayBusResult" type="TodayBusDTO">
+        <result property="busID" column="bus_id" />
+        <result property="start" column="start" />
+        <result property="dest" column="dest" />
+        <result property="date" column="bus_date" jdbcType="DATE"/>
+        <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+        <result property="destTime" column="dest_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
     
     <select id="selectCurrVerifyCount" parameterType="java.lang.String" resultType="java.lang.Integer">
         select count(*) from orders
@@ -20,6 +37,31 @@
 
     <select id="checkOrderStatus" parameterType="java.lang.String" resultType="java.lang.Integer">
         select count(*) from orders
-        where `order_id` = #{orderId, jdbcType=BIGINT}
+        where `order_id` = #{orderId, jdbcType=VARCHAR}
+            and `date` = curdate()
+            and `status` = '1'
+    </select>
+
+    <select id="selectVerifyRecord" parameterType="java.lang.String" resultMap="verifyRecordResult">
+        SELECT
+            order_id, bus_id, bus_date, U.user_name as user_name, verify_time
+        FROM (SELECT bus_id, bus_date, driver FROM tickets) AS T
+        JOIN orders O ON T.bus_id = O.bus AND T.bus_date = O.`date`
+        JOIN sys_user AS U ON O.user_id = U.user_id
+        WHERE O.`status` = '2' AND T.bus_id = #{busId, jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectTodayBus" parameterType="java.lang.String" resultMap="todayBusResult">
+        SELECT
+            B.bus_id as bus_id, S.station_name as `start`, E.station_name as `dest`,
+            T.bus_date as bus_date, start_time, end_time as dest_time
+        FROM
+            (SELECT bus_id, bus_date, driver FROM tickets
+            WHERE bus_date = CURDATE()) AS T
+        JOIN sys_user D ON D.user_id = T.driver
+        JOIN bus B ON B.bus_id = T.bus_id
+        JOIN station S ON S.station_id = B.`start`
+        JOIN station E ON E.station_id = B.`dest`
+        WHERE D.user_name = #{driver, jdbcType=VARCHAR}
     </select>
 </mapper>
