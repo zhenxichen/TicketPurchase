@@ -103,8 +103,7 @@ public class OrdersController extends BaseController
     * @author Mei Huang
     * @date 2021/6/6
     */
-    @PreAuthorize("@ss.hasPermi('api:orders:sellcode')")
-    @GetMapping("/orders/sellcode")
+    @GetMapping("/sellcode")
     public AjaxResult sellCode(@RequestParam("orderID") String orderID){
         SellCodeDTO dto = ordersService.getSellCode(orderID);
         AjaxResult ajax = AjaxResult.success("success",dto);
