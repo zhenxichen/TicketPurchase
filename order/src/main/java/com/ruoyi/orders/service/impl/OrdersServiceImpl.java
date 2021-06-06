@@ -2,6 +2,7 @@ package com.ruoyi.orders.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.orders.domain.dto.SellCodeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.orders.mapper.OrdersMapper;
@@ -91,5 +92,21 @@ public class OrdersServiceImpl implements IOrdersService
     public int deleteOrdersById(Long orderId)
     {
         return ordersMapper.deleteOrdersById(orderId);
+    }
+
+    /**
+    * @Description
+    * @param orderID 订单ID
+    * @return
+    * @author Mei Huang
+    * @date 2021/6/6
+    */
+    @Override
+    public SellCodeDTO getSellCode(String orderID){
+        SellCodeDTO res = new SellCodeDTO();
+        res.setOrderId(orderID);
+        String ticketStatus = ordersMapper.selectStatusById(orderID);
+        res.setTicketStatus(ticketStatus);
+        return res;
     }
 }

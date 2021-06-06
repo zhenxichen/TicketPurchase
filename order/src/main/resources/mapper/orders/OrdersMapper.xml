@@ -34,6 +34,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectOrdersVo"/>
         where order_id = #{orderId}
     </select>
+
+    <select id="selectStatusById" parameterType="String" resultType="String">
+        select status where order_id = #{orderID,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectStatusById" parameterType="Long" resultMap="OrdersResult">
+        <include refid="selectOrdersVo"/>
+        where order_id = #{orderId}
+    </select>
         
     <insert id="insertOrders" parameterType="Orders">
         insert into orders

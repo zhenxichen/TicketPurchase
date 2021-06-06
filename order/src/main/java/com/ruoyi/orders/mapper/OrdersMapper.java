@@ -58,4 +58,13 @@ public interface OrdersMapper
      * @return 结果
      */
     public int deleteOrdersByIds(Long[] orderIds);
+
+    /**
+     * @Description 获取订单核销状态
+     * @param orderID 订单ID
+     * @return 结果
+     * @author Mei Huang
+     * @date 2021/6/6
+     */
+    public String selectStatusById(String orderID);
 }
