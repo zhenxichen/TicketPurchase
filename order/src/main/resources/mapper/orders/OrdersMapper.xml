@@ -33,6 +33,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectOrdersVo"/>
         where order_id = #{orderId}
     </select>
+
+    <select id="selectStatusById" parameterType="String" resultType="String">
+        select `status` from orders where order_id = #{orderID,jdbcType=VARCHAR}
+    </select>
+
         
     <insert id="insertOrders" parameterType="Orders">
         insert into orders
