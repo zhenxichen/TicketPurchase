@@ -55,7 +55,8 @@ public class DriverController {
     @PreAuthorize("@ss.hasPermi('api:driver:trainiverify')")
     @PostMapping("/trainIVerify")
     public AjaxResult verify(@RequestBody OrderId orderId) {
-        if (driverService.checkOrderStatus(orderId.getOrderId())) {
+        if (driverService.checkOrderStatus(orderId.getOrderID())) {
+            driverService.verifyTicket(orderId.getOrderID());
             return AjaxResult.success();
         }
         return AjaxResult.error("订单信息错误");
