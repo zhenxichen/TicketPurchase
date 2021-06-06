@@ -64,4 +64,10 @@
         JOIN station E ON E.station_id = B.`dest`
         WHERE D.user_name = #{driver, jdbcType=VARCHAR}
     </select>
+
+    <update id="updateStatusToVerified" parameterType="java.lang.String">
+        UPDATE orders
+        SET `status` = '2', verify_time = SYSDATE()
+        WHERE order_id = #{orderId, jdbcType=VARCHAR}
+    </update>
 </mapper>

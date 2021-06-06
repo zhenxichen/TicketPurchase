@@ -126,5 +126,13 @@ public class DriverServiceImpl implements IDriverService {
         return voList;
     }
 
-
+    /**
+     * 将订单状态修改为已核验
+     *
+     * @param orderId 订单号
+     */
+    @Override
+    public void verifyTicket(String orderId) {
+        driverMapper.updateStatusToVerified(orderId);
+    }
 }

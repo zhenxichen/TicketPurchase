@@ -45,4 +45,11 @@ public interface DriverMapper {
      * @return
      */
     List<TodayBusDTO> selectTodayBus(String driver);
+
+    /**
+     * 将订单状态更新为已核验（已完成）
+     * @param orderId 订单号
+     * @return
+     */
+    int updateStatusToVerified(String orderId);
 }

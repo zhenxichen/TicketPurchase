@@ -6,13 +6,13 @@ package com.ruoyi.bus.domain;
  * @date 2021/6/5
  */
 public class OrderId {
-    private String orderId;
+    private String orderID;
 
-    public String getOrderId() {
-        return orderId;
+    public String getOrderID() {
+        return orderID;
     }
 
     public void setOrderId(String orderId) {
-        this.orderId = orderId;
+        this.orderID = orderId;
     }
 }
