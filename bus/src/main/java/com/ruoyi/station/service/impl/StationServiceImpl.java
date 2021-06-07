@@ -1,16 +1,18 @@
 package com.ruoyi.station.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.station.mapper.StationMapper;
 import com.ruoyi.station.domain.Station;
+import com.ruoyi.station.domain.dto.StationDTO;
 import com.ruoyi.station.service.IStationService;
 
 /**
  * 车站Service业务层处理
  * 
- * @author ruoyi
+ * @author duan
  * @date 2021-06-07
  */
 @Service
@@ -38,10 +40,15 @@ public class StationServiceImpl implements IStationService
      * @return 车站
      */
     @Override
-    public List<Station> selectStationList(Station station)
+    public List<StationDTO> selectStationList(Station station)
     {
-        return
-                stationMapper.selectStationList(station);
+        List<Station> stationList=stationMapper.selectStationList(station);
+        List<StationDTO> stationDTOList=new ArrayList<StationDTO>();
+        for(Station s :stationList){
+            stationDTOList.add(new StationDTO(s.getStationId(),s.getStationName()));
+        }
+        return stationDTOList;
+
     }
 
     /**

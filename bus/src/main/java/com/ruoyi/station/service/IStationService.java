@@ -2,7 +2,7 @@ package com.ruoyi.station.service;
 
 import java.util.List;
 import com.ruoyi.station.domain.Station;
-
+import com.ruoyi.station.domain.dto.StationDTO;
 /**
  * 车站Service接口
  * 
@@ -25,7 +25,7 @@ public interface IStationService
      * @param station 车站
      * @return 车站集合
      */
-    public List<Station> selectStationList(Station station);
+    public List<StationDTO> selectStationList(Station station);
 
     /**
      * 新增车站
