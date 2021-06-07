@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.tickets.mapper.TicketsMapper">
+    
+    <resultMap type="Tickets" id="TicketsResult">
+        <result property="busId"    column="bus_id"    />
+        <result property="busDate"    column="bus_date"    />
+        <result property="seat"    column="seat"    />
+        <result property="employeeTickets"    column="employee_tickets"    />
+        <result property="normalTickets"    column="normal_tickets"    />
+        <result property="employeeTicketsRemain"    column="employee_tickets_remain"    />
+        <result property="normalTicketsRemain"    column="normal_tickets_remain"    />
+        <result property="employeePrice"    column="employee_price"    />
+        <result property="normalPrice"    column="normal_price"    />
+    </resultMap>
+
+    <sql id="selectTicketsVo">
+        select bus_id, bus_date, seat, employee_tickets, normal_tickets, employee_tickets_remain, normal_tickets_remain, employee_price, normal_price from tickets
+    </sql>
+
+    <select id="selectTicketsList" parameterType="Tickets" resultMap="TicketsResult">
+        <include refid="selectTicketsVo"/>
+        <where>  
+            <if test="seat != null "> and seat = #{seat}</if>
+            <if test="employeeTickets != null "> and employee_tickets = #{employeeTickets}</if>
+            <if test="normalTickets != null "> and normal_tickets = #{normalTickets}</if>
+            <if test="employeeTicketsRemain != null "> and employee_tickets_remain = #{employeeTicketsRemain}</if>
+            <if test="normalTicketsRemain != null "> and normal_tickets_remain = #{normalTicketsRemain}</if>
+            <if test="employeePrice != null "> and employee_price = #{employeePrice}</if>
+            <if test="normalPrice != null "> and normal_price = #{normalPrice}</if>
+        </where>
+    </select>
+    
+    <select id="selectTicketsById" parameterType="String" resultMap="TicketsResult">
+        <include refid="selectTicketsVo"/>
+        where bus_id = #{busId}
+    </select>
+        
+    <insert id="insertTickets" parameterType="Tickets">
+        insert into tickets
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="busId != null">bus_id,</if>
+            <if test="busDate != null">bus_date,</if>
+            <if test="seat != null">seat,</if>
+            <if test="employeeTickets != null">employee_tickets,</if>
+            <if test="normalTickets != null">normal_tickets,</if>
+            <if test="employeeTicketsRemain != null">employee_tickets_remain,</if>
+            <if test="normalTicketsRemain != null">normal_tickets_remain,</if>
+            <if test="employeePrice != null">employee_price,</if>
+            <if test="normalPrice != null">normal_price,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="busId != null">#{busId},</if>
+            <if test="busDate != null">#{busDate},</if>
+            <if test="seat != null">#{seat},</if>
+            <if test="employeeTickets != null">#{employeeTickets},</if>
+            <if test="normalTickets != null">#{normalTickets},</if>
+            <if test="employeeTicketsRemain != null">#{employeeTicketsRemain},</if>
+            <if test="normalTicketsRemain != null">#{normalTicketsRemain},</if>
+            <if test="employeePrice != null">#{employeePrice},</if>
+            <if test="normalPrice != null">#{normalPrice},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTickets" parameterType="Tickets">
+        update tickets
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="busDate != null">bus_date = #{busDate},</if>
+            <if test="seat != null">seat = #{seat},</if>
+            <if test="employeeTickets != null">employee_tickets = #{employeeTickets},</if>
+            <if test="normalTickets != null">normal_tickets = #{normalTickets},</if>
+            <if test="employeeTicketsRemain != null">employee_tickets_remain = #{employeeTicketsRemain},</if>
+            <if test="normalTicketsRemain != null">normal_tickets_remain = #{normalTicketsRemain},</if>
+            <if test="employeePrice != null">employee_price = #{employeePrice},</if>
+            <if test="normalPrice != null">normal_price = #{normalPrice},</if>
+        </trim>
+        where bus_id = #{busId}
+    </update>
+
+    <delete id="deleteTicketsById" parameterType="String">
+        delete from tickets where bus_id = #{busId}
+    </delete>
+
+    <delete id="deleteTicketsByIds" parameterType="String">
+        delete from tickets where bus_id in 
+        <foreach item="busId" collection="array" open="(" separator="," close=")">
+            #{busId}
+        </foreach>
+    </delete>
+</mapper>

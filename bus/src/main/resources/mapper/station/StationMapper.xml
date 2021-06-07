@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.station.mapper.StationMapper">
+    
+    <resultMap type="Station" id="StationResult">
+        <result property="stationId"    column="station_id"    />
+        <result property="stationName"    column="station_name"    />
+    </resultMap>
+
+    <sql id="selectStationVo">
+        select station_id, station_name from station
+    </sql>
+
+    <select id="selectStationList" parameterType="Station" resultMap="StationResult">
+        <include refid="selectStationVo"/>
+        <where>  
+            <if test="stationName != null  and stationName != ''"> and station_name like concat('%', #{stationName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectStationById" parameterType="Long" resultMap="StationResult">
+        <include refid="selectStationVo"/>
+        where station_id = #{stationId}
+    </select>
+        
+    <insert id="insertStation" parameterType="Station">
+        insert into station
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stationId != null">station_id,</if>
+            <if test="stationName != null and stationName != ''">station_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stationId != null">#{stationId},</if>
+            <if test="stationName != null and stationName != ''">#{stationName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStation" parameterType="Station">
+        update station
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stationName != null and stationName != ''">station_name = #{stationName},</if>
+        </trim>
+        where station_id = #{stationId}
+    </update>
+
+    <delete id="deleteStationById" parameterType="Long">
+        delete from station where station_id = #{stationId}
+    </delete>
+
+    <delete id="deleteStationByIds" parameterType="String">
+        delete from station where station_id in 
+        <foreach item="stationId" collection="array" open="(" separator="," close=")">
+            #{stationId}
+        </foreach>
+    </delete>
+</mapper>

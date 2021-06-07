@@ -36,7 +36,7 @@ public class BusController extends BaseController
     /**
      * 查询车次管理列表
      */
-    @PreAuthorize("@ss.hasPermi('bus:bus:list')")
+    //@PreAuthorize("@ss.hasPermi('bus:bus:list')")
     @GetMapping("/list")
     public TableDataInfo list(Bus bus)
     {
