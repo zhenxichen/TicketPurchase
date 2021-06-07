@@ -1,12 +1,18 @@
 package com.ruoyi.user.domain.dto;
 
+import com.ruoyi.common.core.domain.entity.SysRole;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.List;
+
 public class UserManageDTO {
 
-    private String userId;      // 用户ID
+    private Long userId;      // 用户ID
 
     private String username;    // 用户名
 
-    private String role;        // 角色
+    private String nickName;    // 用户昵称
 
     private String phonenumber; // 手机号码
 
@@ -14,11 +20,13 @@ public class UserManageDTO {
 
     private int balance;        // 余额
 
-    public String getUserId() {
+    private List<SysRole> roles;        // 角色
+
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -30,12 +38,20 @@ public class UserManageDTO {
         this.username = username;
     }
 
-    public String getRole() {
-        return role;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public List<SysRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<SysRole> roles) {
+        this.roles = roles;
     }
 
     public String getPhonenumber() {
@@ -60,5 +76,17 @@ public class UserManageDTO {
 
     public void setBalance(int balance) {
         this.balance = balance;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("userId", getUserId())
+                .append("username", getUsername())
+                .append("nickName", getNickName())
+                .append("phonenumber", getPhonenumber())
+                .append("balance", getBalance())
+                .append("status", getStatus())
+                .toString();
     }
 }

@@ -2,6 +2,9 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.ruoyi.user.domain.dto.UserManageDTO;
+import com.ruoyi.user.service.IUserManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -53,6 +56,9 @@ public class SysUserController extends BaseController
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private IUserManageService userManageService;
+
     /**
      * 获取用户列表
      */
@@ -61,7 +67,7 @@ public class SysUserController extends BaseController
     public TableDataInfo list(SysUser user)
     {
         startPage();
-        List<SysUser> list = userService.selectUserList(user);
+        List<UserManageDTO> list = userManageService.selectUserList(user);
         return getDataTable(list);
     }
 

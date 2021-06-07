@@ -2,8 +2,11 @@ package com.ruoyi.user.service.impl;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.system.mapper.SysUserMapper;
-import com.ruoyi.user.domain.vo.UserManageVO;
+import com.ruoyi.user.domain.dto.UserManageDTO;
+import com.ruoyi.user.mapper.UserManageMapper;
+import com.ruoyi.user.service.IUserManageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -12,10 +15,14 @@ import java.util.List;
  * @author Zhenxi Chen
  * @date 2021/6/7
  */
-public class UserManageServiceImpl {
+@Service
+public class UserManageServiceImpl implements IUserManageService {
 
     @Autowired
     private SysUserMapper userMapper;
+
+    @Autowired
+    private UserManageMapper userManageMapper;
 
     /**
      * 获取用户列表
@@ -23,17 +30,8 @@ public class UserManageServiceImpl {
      * @param user 前端传来的SysUser对象
      * @return
      */
-    public List<UserManageVO> selectUserList(SysUser user) {
-        List<SysUser> sysUserList = userMapper.selectUserList(user);
-        return null;
+    public List<UserManageDTO> selectUserList(SysUser user) {
+        return userManageMapper.selectUserList(user);
     }
 
-    /**
-     * 将SysUser对象转为UserManageVO对象
-     * @param user SysUser对象
-     * @return UserManageVO对象
-     */
-    private UserManageVO sysUserToVO(SysUser user) {
-        return null;
-    }
 }
