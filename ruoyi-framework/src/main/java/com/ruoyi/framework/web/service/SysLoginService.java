@@ -6,10 +6,7 @@ import com.ruoyi.common.core.domain.model.LoginRes;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.exception.CustomException;
-import com.ruoyi.common.exception.user.CaptchaException;
-import com.ruoyi.common.exception.user.CaptchaExpireException;
-import com.ruoyi.common.exception.user.PhoneNumberNotExistException;
-import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
+import com.ruoyi.common.exception.user.*;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.MessageUtils;
 import com.ruoyi.common.utils.ServletUtils;
@@ -164,8 +161,13 @@ public class SysLoginService {
      */
     public LoginRes loginByWechat(String openid) {
         UserOpenIdDTO dto = userInfoService.selectUsernameByOpenId(openid);
+        if (dto == null) {
+            throw new WechatNotBindException();
+        }
         LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(dto.getUsername());
         String token = tokenService.createToken(loginUser);
-        return null;
+        List<Integer> roleIds = roleService.selectRoleListByUserId(dto.getUserId());
+        String type = UserTypeUtils.getUserTypeString(roleIds);
+        return new LoginRes(token, type);
     }
 }

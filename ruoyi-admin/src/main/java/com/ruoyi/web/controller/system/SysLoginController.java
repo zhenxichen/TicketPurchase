@@ -3,8 +3,7 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import java.util.Set;
 
-import com.ruoyi.common.core.domain.model.LoginRes;
-import com.ruoyi.common.core.domain.model.PhoneLoginBody;
+import com.ruoyi.common.core.domain.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,8 +13,6 @@ import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysMenu;
 import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.core.domain.model.LoginBody;
-import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.framework.web.service.SysLoginService;
 import com.ruoyi.framework.web.service.SysPermissionService;
@@ -76,6 +73,20 @@ public class SysLoginController
         return ajax;
     }
 
+    /**
+     * 微信快捷登录方法
+     *
+     * @param loginBody 微信登录信息
+     * @return 返回的Ajax结构体
+     */
+    @PostMapping("/login/wechat")
+    public AjaxResult loginByWechat(@RequestBody WechatLoginBody loginBody) {
+        AjaxResult ajax = AjaxResult.success();
+        LoginRes res = loginService.loginByWechat(loginBody.getOpenid());
+        ajax.put(Constants.TOKEN, res.getToken());
+        ajax.put(USER_TYPE, res.getType());
+        return ajax;
+    }
 
     /**
      * 获取用户信息
