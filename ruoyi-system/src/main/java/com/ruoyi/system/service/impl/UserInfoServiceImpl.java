@@ -1,6 +1,8 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.UserOpenIdDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.UserInfoMapper;
@@ -90,4 +92,16 @@ public class UserInfoServiceImpl implements IUserInfoService
     {
         return userInfoMapper.deleteUserInfoById(userId);
     }
+
+    /**
+     * 通过open ID获取用户名
+     *
+     * @param openId open ID
+     * @return
+     */
+    @Override
+    public UserOpenIdDTO selectUsernameByOpenId(String openId) {
+        return userInfoMapper.selectUserByOpenId(openId);
+    }
+
 }

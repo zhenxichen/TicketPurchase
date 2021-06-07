@@ -1,16 +1,11 @@
 package com.ruoyi.orders.controller;
 
 import java.util.List;
+
+import com.ruoyi.orders.domain.dto.SellCodeDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -23,8 +18,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 /**
  * 订单Controller
  * 
- * @author Zhenxi Chen
- * @date 2021-06-05
+ * @author ruoyi
+ * @date 2021-06-06
  */
 @RestController
 @RequestMapping("/orders/orders")
@@ -63,7 +58,7 @@ public class OrdersController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('orders:orders:query')")
     @GetMapping(value = "/{orderId}")
-    public AjaxResult getInfo(@PathVariable("orderId") Long orderId)
+    public AjaxResult getInfo(@PathVariable("orderId") String orderId)
     {
         return AjaxResult.success(ordersService.selectOrdersById(orderId));
     }
@@ -96,8 +91,22 @@ public class OrdersController extends BaseController
     @PreAuthorize("@ss.hasPermi('orders:orders:remove')")
     @Log(title = "订单", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{orderIds}")
-    public AjaxResult remove(@PathVariable Long[] orderIds)
+    public AjaxResult remove(@PathVariable String[] orderIds)
     {
         return toAjax(ordersService.deleteOrdersByIds(orderIds));
+    }
+
+    /**
+    * @Description 获取给定订单号的核销码的接口
+    * @param orderID 订单编号
+    * @return
+    * @author Mei Huang
+    * @date 2021/6/6
+    */
+    @GetMapping("/sellcode")
+    public AjaxResult sellCode(@RequestParam("orderID") String orderID){
+        SellCodeDTO dto = ordersService.getSellCode(orderID);
+        AjaxResult ajax = AjaxResult.success("success",dto);
+        return ajax;
     }
 }

@@ -21,7 +21,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectOrdersList" parameterType="Orders" resultMap="OrdersResult">
         <include refid="selectOrdersVo"/>
         <where>  
-            <if test="orderId != null "> and order_id = #{orderId}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="bus != null  and bus != ''"> and bus = #{bus}</if>
@@ -30,10 +29,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectOrdersById" parameterType="Long" resultMap="OrdersResult">
+    <select id="selectOrdersById" parameterType="String" resultMap="OrdersResult">
         <include refid="selectOrdersVo"/>
         where order_id = #{orderId}
     </select>
+
+    <select id="selectStatusById" parameterType="String" resultType="String">
+        select `status` from orders where order_id = #{orderID,jdbcType=VARCHAR}
+    </select>
+
         
     <insert id="insertOrders" parameterType="Orders">
         insert into orders
@@ -70,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where order_id = #{orderId}
     </update>
 
-    <delete id="deleteOrdersById" parameterType="Long">
+    <delete id="deleteOrdersById" parameterType="String">
         delete from orders where order_id = #{orderId}
     </delete>
 

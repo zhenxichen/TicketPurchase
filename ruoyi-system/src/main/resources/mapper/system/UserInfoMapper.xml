@@ -12,6 +12,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="balance"    column="balance"    />
     </resultMap>
 
+    <resultMap type="UserOpenIdDTO" id="UserOpenIdResult">
+        <result property="userId" column="user_id" />
+        <result property="username" column="user_name" />
+        <result property="openId" column="open_id" />
+    </resultMap>
+
     <sql id="selectUserInfoVo">
         select user_id, name, id_card, open_id, balance from user_info
     </sql>
@@ -70,4 +76,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{userId}
         </foreach>
     </delete>
+    
+    <select id="selectUserByOpenId" parameterType="String" resultMap="UserOpenIdResult">
+        SELECT I.user_id AS user_id, U.user_name AS user_name, I.open_id AS open_id
+        FROM user_info I
+        JOIN sys_user U ON U.user_id = I.user_id
+        WHERE I.open_id = #{openid, jdbcType=VARCHAR}
+    </select>
 </mapper>

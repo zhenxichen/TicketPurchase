@@ -7,7 +7,7 @@ import com.ruoyi.orders.domain.Orders;
  * 订单Mapper接口
  * 
  * @author ruoyi
- * @date 2021-06-05
+ * @date 2021-06-06
  */
 public interface OrdersMapper 
 {
@@ -17,7 +17,7 @@ public interface OrdersMapper
      * @param orderId 订单ID
      * @return 订单
      */
-    public Orders selectOrdersById(Long orderId);
+    public Orders selectOrdersById(String orderId);
 
     /**
      * 查询订单列表
@@ -49,7 +49,7 @@ public interface OrdersMapper
      * @param orderId 订单ID
      * @return 结果
      */
-    public int deleteOrdersById(Long orderId);
+    public int deleteOrdersById(String orderId);
 
     /**
      * 批量删除订单
@@ -57,5 +57,14 @@ public interface OrdersMapper
      * @param orderIds 需要删除的数据ID
      * @return 结果
      */
-    public int deleteOrdersByIds(Long[] orderIds);
+    public int deleteOrdersByIds(String[] orderIds);
+
+    /**
+     * @Description 获取订单核销状态
+     * @param orderID 订单ID
+     * @return 结果
+     * @author Mei Huang
+     * @date 2021/6/6
+     */
+    public String selectStatusById(String orderID);
 }

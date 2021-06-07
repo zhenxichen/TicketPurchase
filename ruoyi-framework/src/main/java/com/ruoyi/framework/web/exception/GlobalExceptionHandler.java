@@ -7,6 +7,7 @@ import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.exception.DemoModeException;
 import com.ruoyi.common.exception.user.PhoneNumberNotExistException;
 import com.ruoyi.common.exception.user.SignUpException;
+import com.ruoyi.common.exception.user.WechatNotBindException;
 import com.ruoyi.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,5 +127,13 @@ public class GlobalExceptionHandler {
         } else {
             return AjaxResult.error("注册失败");
         }
+    }
+
+    /**
+     * 微信未绑定异常
+     */
+    @ExceptionHandler(WechatNotBindException.class)
+    public AjaxResult wechatNotBindException(WechatNotBindException e) {
+        return AjaxResult.error("该微信账号尚未绑定账号");
     }
 }

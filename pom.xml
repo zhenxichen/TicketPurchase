@@ -230,6 +230,13 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- 用户扩展模块 -->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>user</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -242,6 +249,7 @@
         <module>ruoyi-common</module>
         <module>order</module>
         <module>bus</module>
+        <module>user</module>
     </modules>
     <packaging>pom</packaging>
 
