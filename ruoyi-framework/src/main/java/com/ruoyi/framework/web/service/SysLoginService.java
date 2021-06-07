@@ -6,10 +6,7 @@ import com.ruoyi.common.core.domain.model.LoginRes;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.exception.CustomException;
-import com.ruoyi.common.exception.user.CaptchaException;
-import com.ruoyi.common.exception.user.CaptchaExpireException;
-import com.ruoyi.common.exception.user.PhoneNumberNotExistException;
-import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
+import com.ruoyi.common.exception.user.*;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.MessageUtils;
 import com.ruoyi.common.utils.ServletUtils;
@@ -17,13 +14,17 @@ import com.ruoyi.common.utils.UserTypeUtils;
 import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
+import com.ruoyi.system.domain.UserInfo;
+import com.ruoyi.system.domain.UserOpenIdDTO;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -50,6 +51,12 @@ public class SysLoginService {
 
     @Autowired
     private ISysRoleService roleService;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private IUserInfoService userInfoService;
 
     /**
      * 登录验证
@@ -142,6 +149,24 @@ public class SysLoginService {
         // 生成JWT
         String token = tokenService.createToken(loginUser);
         List<Integer> roleIds = roleService.selectRoleListByUserId(user.getUserId());
+        String type = UserTypeUtils.getUserTypeString(roleIds);
+        return new LoginRes(token, type);
+    }
+
+    /**
+     * 通过微信openid进行登录
+     *
+     * @param openid 微信openid
+     * @return
+     */
+    public LoginRes loginByWechat(String openid) {
+        UserOpenIdDTO dto = userInfoService.selectUsernameByOpenId(openid);
+        if (dto == null) {
+            throw new WechatNotBindException();
+        }
+        LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(dto.getUsername());
+        String token = tokenService.createToken(loginUser);
+        List<Integer> roleIds = roleService.selectRoleListByUserId(dto.getUserId());
         String type = UserTypeUtils.getUserTypeString(roleIds);
         return new LoginRes(token, type);
     }

@@ -85,6 +85,12 @@
             <artifactId>bus</artifactId>
         </dependency>
 
+        <!-- 用户扩展模块 -->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>user</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
