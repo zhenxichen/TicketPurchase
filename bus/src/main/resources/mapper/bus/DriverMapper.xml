@@ -48,7 +48,7 @@
         FROM (SELECT bus_id, bus_date, driver FROM tickets) AS T
         JOIN orders O ON T.bus_id = O.bus AND T.bus_date = O.`date`
         JOIN sys_user AS U ON O.user_id = U.user_id
-        WHERE O.`status` = '2' AND T.bus_id = #{busId, jdbcType=VARCHAR}
+        WHERE (O.`status` = '1' OR O.`status` = '2') AND T.bus_id = #{busId, jdbcType=VARCHAR}
     </select>
 
     <select id="selectTodayBus" parameterType="java.lang.String" resultMap="todayBusResult">
