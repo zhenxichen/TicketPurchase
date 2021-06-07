@@ -1,5 +1,7 @@
 package com.ruoyi.bus.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**
@@ -15,6 +17,7 @@ public class VerifyDTO {
 
     private String busID;       // 车次
 
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date busDate;       // 日期
 
     private Date verifyTime;    // 核销时间
