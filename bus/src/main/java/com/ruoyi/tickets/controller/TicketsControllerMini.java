@@ -93,6 +93,11 @@ public class TicketsControllerMini
         Long userRole=user.getRoles().get(0).getRoleId();
         String orderId=ticketsService.purchaseTicket(ticketOrder,userId,userRole);
         AjaxResult result = AjaxResult.success();
+        if (orderId==null){
+            result.put("orderId","购票失败");
+        }else{
+            result.put("orderId",orderId);
+        }
         return result;
     }
 }

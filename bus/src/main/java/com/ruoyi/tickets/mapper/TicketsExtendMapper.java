@@ -23,4 +23,11 @@ public interface TicketsExtendMapper {
      * 根据车次和开车日期筛选车票
      */
     public Tickets selectTicketsByIdAndDate(@Param("busId") String busId, @Param("startDate")Date startDate);
+    /**
+     * 修改车票管理
+     *
+     * @param tickets 车票管理
+     * @return 结果
+     */
+    public int updateTickets(Tickets tickets);
 }

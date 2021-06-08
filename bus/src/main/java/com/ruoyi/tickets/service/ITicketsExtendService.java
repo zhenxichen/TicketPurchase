@@ -21,6 +21,11 @@ public interface ITicketsExtendService {
 
     /**
      * 购票，返回订单id
+     * 员工优先买员工票，没有员工票可以买普通票
+     * 普通用户只能买普通用户
+     * 购票成功返回订单id
+     * 购票失败返回null
+     * 目前防错机制不太完善
      * @param ticketOrder
      * @return
      */

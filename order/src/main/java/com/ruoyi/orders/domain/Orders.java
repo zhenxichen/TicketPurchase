@@ -60,7 +60,7 @@ public class Orders extends BaseEntity
     {
         return userId;
     }
-    public void setStatus(String status) 
+    public void setStatus(String status)
     {
         this.status = status;
     }

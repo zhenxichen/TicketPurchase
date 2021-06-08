@@ -2,6 +2,9 @@ package com.ruoyi.tickets.service.impl;
 
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.orders.mapper.OrdersMapper;
+import com.ruoyi.orders.util.OrderIdCreator;
+import com.ruoyi.orders.domain.Orders;
 import com.ruoyi.station.service.IStationExtendService;
 import com.ruoyi.tickets.domain.DTO.TicketDTO;
 import com.ruoyi.tickets.domain.TicketOrder;
@@ -10,8 +13,8 @@ import com.ruoyi.tickets.mapper.TicketsExtendMapper;
 import com.ruoyi.tickets.mapper.TicketsMapper;
 import com.ruoyi.tickets.service.ITicketsExtendService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,6 +31,8 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
     @Autowired
     private TicketsMapper ticketsMapper;
 
+    @Autowired
+    private OrdersMapper ordersMapper;
     @Autowired
     private TokenService tokenService;
 
@@ -55,27 +60,44 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
     }
 
     @Override
-    public String purchaseTicket(TicketOrder ticketOrder,Long uerId,Long userRole) {
+    public String purchaseTicket(TicketOrder ticketOrder,Long userId,Long userRole) {
+        //选择当天的车次
         Tickets ticket=ticketsExtendMapper.selectTicketsByIdAndDate(ticketOrder.getBusId(),ticketOrder.getStartDate());
+        //余票
         Long employeeTicketsRemain=ticket.getEmployeeTicketsRemain();
         Long normalTicketsRemain=ticket.getNormalTicketsRemain();
+        //创建订单
+        String orderId= new OrderIdCreator(userId,ticketOrder.getBusId(),ticketOrder.getStartDate()).createOrderId();
+        Orders orders=new Orders();
+        orders.setBus(ticketOrder.getBusId());
+        orders.setDate(ticketOrder.getStartDate());
+        orders.setOrderId(orderId);
+        orders.setUserId(userId);
+        orders.setStatus("1");
+        orders.setCreateTime(new Date());
+        //购票
         if (userRole==2){
             if(normalTicketsRemain>0){
-
+                ordersMapper.insertOrders(orders);
+                ticket.setNormalTicketsRemain(ticket.getNormalTicketsRemain()-1);
             }else{
                 return null;
             }
         }else{
             if(employeeTicketsRemain>0){
-
+                ordersMapper.insertOrders(orders);
+                ticket.setEmployeeTicketsRemain(ticket.getEmployeeTicketsRemain()-1);
             }else if(normalTicketsRemain>0){
-
+                ordersMapper.insertOrders(orders);
+                ticket.setNormalTicketsRemain(ticket.getNormalTicketsRemain()-1);
             }else{
                 return null;
             }
         }
+        //更新票余量
+        ticketsExtendMapper.updateTickets(ticket);
         //LoginUser loginUser = tokenService.getLoginUser(request);
         //TicketOrder ticketOrder=request.get
-        return null;
+        return orderId;
     }
 }

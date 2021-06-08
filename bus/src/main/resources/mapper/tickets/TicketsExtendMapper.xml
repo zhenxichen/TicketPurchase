@@ -47,4 +47,19 @@
         <include refid="selectTicketsVo"/>
         where bus_id=#{busId} and bus_date=date(#{startDate})
     </select>
+
+    <update id="updateTickets" parameterType="Tickets">
+        update tickets
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="busDate != null">bus_date = #{busDate},</if>
+            <if test="seat != null">seat = #{seat},</if>
+            <if test="employeeTickets != null">employee_tickets = #{employeeTickets},</if>
+            <if test="normalTickets != null">normal_tickets = #{normalTickets},</if>
+            <if test="employeeTicketsRemain != null">employee_tickets_remain = #{employeeTicketsRemain},</if>
+            <if test="normalTicketsRemain != null">normal_tickets_remain = #{normalTicketsRemain},</if>
+            <if test="employeePrice != null">employee_price = #{employeePrice},</if>
+            <if test="normalPrice != null">normal_price = #{normalPrice},</if>
+        </trim>
+        where bus_id = #{busId} and bus_date=#{busDate}
+    </update>
 </mapper>
