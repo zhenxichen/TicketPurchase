@@ -1,8 +1,17 @@
 package com.ruoyi.orders.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.orders.domain.OrderInfo;
+import com.ruoyi.orders.domain.OrdersInfo;
 import com.ruoyi.orders.domain.dto.SellCodeDTO;
+import com.ruoyi.orders.domain.dto.UserOrdersDTO;
+import com.ruoyi.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +31,14 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2021-06-06
  */
 @RestController
-@RequestMapping("/orders/orders")
+@RequestMapping({"/orders/orders","/ticketMiniProgram/orders"})
 public class OrdersController extends BaseController
 {
     @Autowired
     private IOrdersService ordersService;
+
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 查询订单列表
@@ -99,7 +111,7 @@ public class OrdersController extends BaseController
     /**
     * @Description 获取给定订单号的核销码的接口
     * @param orderID 订单编号
-    * @return
+    * @return 结果
     * @author Mei Huang
     * @date 2021/6/6
     */
@@ -108,5 +120,50 @@ public class OrdersController extends BaseController
         SellCodeDTO dto = ordersService.getSellCode(orderID);
         AjaxResult ajax = AjaxResult.success("success",dto);
         return ajax;
+    }
+
+    /**
+    * @Description 获取用户订单列表
+    * @param orderInfo
+    * @return 结果
+    * @author Mei Huang
+    * @date 2021/6/8
+    */
+    @PostMapping("/list")
+    public AjaxResult userOrderList(@RequestBody OrderInfo orderInfo) throws ParseException {
+        System.out.println("orderInfo:"+orderInfo);
+
+        String userName = SecurityUtils.getUsername();
+        SysUser user = userService.selectUserByUserName(userName);
+        Long userId = user.getUserId();
+        Long userRoleId = user.getRoles().get(0).getRoleId();
+
+        System.out.println("userRoleId:"+userRoleId);
+
+        OrdersInfo userOrder = new OrdersInfo();
+        userOrder.setUserId(userId);
+        userOrder.setOrderID(orderInfo.getOrderID());
+        userOrder.setStart(orderInfo.getStart());
+        userOrder.setDest(orderInfo.getDest());
+        Date date = null;
+        if(orderInfo.getDate()!=null){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//注意月份是MM
+            date = simpleDateFormat.parse(orderInfo.getDate());
+        }
+        userOrder.setDate(date);
+
+        List<UserOrdersDTO> userOrdersList = null;
+        if(userRoleId==2){
+            //用户
+            userOrdersList = ordersService.selectNormalOrdersList(userOrder);
+        }else if(userRoleId==100||userRoleId==101){
+            //员工
+            userOrdersList = ordersService.selectEmployeeOrdersList(userOrder);
+        }
+
+        AjaxResult ajaxResult = AjaxResult.success();
+        ajaxResult.put("length",userOrdersList.size());
+        ajaxResult.put("orderList",userOrdersList);
+        return ajaxResult;
     }
 }

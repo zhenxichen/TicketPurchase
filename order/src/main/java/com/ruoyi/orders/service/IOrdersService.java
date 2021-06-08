@@ -2,7 +2,10 @@ package com.ruoyi.orders.service;
 
 import java.util.List;
 import com.ruoyi.orders.domain.Orders;
+import com.ruoyi.orders.domain.OrderInfo;
+import com.ruoyi.orders.domain.OrdersInfo;
 import com.ruoyi.orders.domain.dto.SellCodeDTO;
+import com.ruoyi.orders.domain.dto.UserOrdersDTO;
 
 /**
  * 订单Service接口
@@ -68,4 +71,22 @@ public interface IOrdersService
      * @date 2021/6/6
      */
     SellCodeDTO getSellCode(String orderID);
+
+    /**
+    * @Description 获取普通用户订单列表
+    * @param userOrder
+    * @return 结果list
+    * @author Mei Huang
+    * @date 2021/6/8
+    */
+    List<UserOrdersDTO> selectNormalOrdersList(OrdersInfo userOrder);
+
+    /**
+     * @Description 获取员工用户订单列表
+     * @param userOrder
+     * @return 结果list
+     * @author Mei Huang
+     * @date 2021/6/8
+     */
+    List<UserOrdersDTO> selectEmployeeOrdersList(OrdersInfo userOrder);
 }
