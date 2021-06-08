@@ -72,7 +72,6 @@ public class DriverController {
     @GetMapping("/trainVerify")
     public AjaxResult verify(@RequestParam("busID") String busID) {
         VerifyRecordVO vo = driverService.verifyRecord(busID);
-        System.out.println(vo.getVerifyList().get(0).getVerifyTime());
         return AjaxResult.success(vo);
     }
 
