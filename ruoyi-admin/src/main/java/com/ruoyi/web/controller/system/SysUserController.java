@@ -87,19 +87,19 @@ public class SysUserController extends BaseController
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
     {
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        List<SysUser> userList = util.importExcel(file.getInputStream());
+        ExcelUtil<UserExcelVO> util = new ExcelUtil<>(UserExcelVO.class);
+        List<UserExcelVO> userList = util.importExcel(file.getInputStream());
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         String operName = loginUser.getUsername();
-        String message = userService.importUser(userList, updateSupport, operName);
+        String message = userManageService.importUser(userList, updateSupport, operName);
         return AjaxResult.success(message);
     }
 
     @GetMapping("/importTemplate")
     public AjaxResult importTemplate()
     {
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        return util.importTemplateExcel("用户数据");
+        ExcelUtil<UserExcelVO> util = new ExcelUtil<>(UserExcelVO.class);
+        return util.importTemplateExcel("用户数据模板");
     }
 
     /**
