@@ -24,7 +24,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectStationVo"/>
         where station_id = #{stationId}
     </select>
-        
+
+
+
     <insert id="insertStation" parameterType="Station">
         insert into station
         <trim prefix="(" suffix=")" suffixOverrides=",">

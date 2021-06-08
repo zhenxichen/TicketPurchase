@@ -3,6 +3,8 @@ package com.ruoyi.station.controller;
 import java.util.List;
 
 import com.ruoyi.station.domain.dto.StationDTO;
+import com.ruoyi.station.domain.dto.StationListDTO;
+import com.ruoyi.station.service.IStationExtendService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +35,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class StationControllerMini
 {
     @Autowired
-    private IStationService stationService;
+    private IStationExtendService stationService;
 
     /**
      * 查询车站列表
@@ -42,7 +44,7 @@ public class StationControllerMini
     @GetMapping("/list")
     public AjaxResult list(Station station)
     {
-        List<StationDTO> list = stationService.selectStationList(station);
+        List<StationListDTO> list = stationService.selectStationList(station);
         AjaxResult ajax = AjaxResult.success();
         ajax.put("length",list.size());
         ajax.put("stationList",list);

@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectTicketsList" parameterType="Tickets" resultMap="TicketsResult">
         <include refid="selectTicketsVo"/>
-        <where>  
+        <where>
             <if test="seat != null "> and seat = #{seat}</if>
             <if test="employeeTickets != null "> and employee_tickets = #{employeeTickets}</if>
             <if test="normalTickets != null "> and normal_tickets = #{normalTickets}</if>
@@ -32,7 +32,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="normalPrice != null "> and normal_price = #{normalPrice}</if>
         </where>
     </select>
-    
+
+
+
     <select id="selectTicketsById" parameterType="String" resultMap="TicketsResult">
         <include refid="selectTicketsVo"/>
         where bus_id = #{busId}

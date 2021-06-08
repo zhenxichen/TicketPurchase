@@ -1,7 +1,11 @@
 package com.ruoyi.tickets.mapper;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.tickets.domain.DTO.TicketDTO;
 import com.ruoyi.tickets.domain.Tickets;
+import sun.security.krb5.internal.Ticket;
 
 /**
  * 车票管理Mapper接口
@@ -58,4 +62,7 @@ public interface TicketsMapper
      * @return 结果
      */
     public int deleteTicketsByIds(String[] busIds);
+
+
+
 }

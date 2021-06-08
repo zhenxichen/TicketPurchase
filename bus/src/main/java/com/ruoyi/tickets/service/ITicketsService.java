@@ -1,7 +1,12 @@
 package com.ruoyi.tickets.service;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.tickets.domain.DTO.TicketDTO;
 import com.ruoyi.tickets.domain.Tickets;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 车票管理Service接口
@@ -18,6 +23,7 @@ public interface ITicketsService
      * @return 车票管理
      */
     public Tickets selectTicketsById(String busId);
+
 
     /**
      * 查询车票管理列表
@@ -58,4 +64,7 @@ public interface ITicketsService
      * @return 结果
      */
     public int deleteTicketsById(String busId);
+
+
+
 }

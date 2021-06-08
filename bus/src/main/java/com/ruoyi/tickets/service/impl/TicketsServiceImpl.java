@@ -1,11 +1,22 @@
 package com.ruoyi.tickets.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Date;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.station.domain.Station;
+import com.ruoyi.station.service.IStationExtendService;
+import com.ruoyi.station.service.IStationService;
+import com.ruoyi.tickets.domain.DTO.TicketDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.tickets.mapper.TicketsMapper;
 import com.ruoyi.tickets.domain.Tickets;
 import com.ruoyi.tickets.service.ITicketsService;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 车票管理Service业务层处理
@@ -19,6 +30,11 @@ public class TicketsServiceImpl implements ITicketsService
     @Autowired
     private TicketsMapper ticketsMapper;
 
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private IStationExtendService stationService;
     /**
      * 查询车票管理
      * 
@@ -90,4 +106,7 @@ public class TicketsServiceImpl implements ITicketsService
     {
         return ticketsMapper.deleteTicketsById(busId);
     }
+
+
+
 }

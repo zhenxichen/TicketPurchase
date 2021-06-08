@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.tickets.mapper.TicketsExtendMapper">
+
+    <resultMap type="com.ruoyi.tickets.domain.DTO.TicketDTO" id="TicketsResultExtend">
+        <result property="busId"    column="bus_idd"    />
+        <result property="startStation"    column="start_station"    />
+        <result property="destStation"    column="dest_station"    />
+        <result property="busDate"    column="bus_date"  jdbcType="DATE"  />
+        <result property="startTime"    column="start_time"  jdbcType="TIMESTAMP"  />
+        <result property="endTime"    column="end_time"  jdbcType="TIMESTAMP"  />
+        <result property="employeePrice"    column="employee_price"    />
+        <result property="normalPrice"    column="normal_price"    />
+        <result property="employeeTicketsRemain"    column="employee_tickets_remain"    />
+        <result property="normalTicketsRemain"    column="normal_tickets_remain"    />
+    </resultMap>
+
+    <resultMap type="Tickets" id="TicketsResult">
+        <result property="busId"    column="bus_id"    />
+        <result property="busDate"    column="bus_date"    />
+        <result property="seat"    column="seat"    />
+        <result property="employeeTickets"    column="employee_tickets"    />
+        <result property="normalTickets"    column="normal_tickets"    />
+        <result property="employeeTicketsRemain"    column="employee_tickets_remain"    />
+        <result property="normalTicketsRemain"    column="normal_tickets_remain"    />
+        <result property="employeePrice"    column="employee_price"    />
+        <result property="normalPrice"    column="normal_price"    />
+    </resultMap>
+
+    <sql id="selectTicketsVo">
+        select bus_id, bus_date, seat, employee_tickets, normal_tickets, employee_tickets_remain, normal_tickets_remain, employee_price, normal_price from tickets
+    </sql>
+
+    <select id="selectTicketsByStationAndDate"  resultMap="TicketsResultExtend">
+        select tickets.bus_id as bus_idd,
+        (select station_name from station where station_id=start) as start_station,
+        (select station_name from station where station_id=dest) as dest_station,
+        bus_date,start_time,end_time,employee_price,normal_price,employee_tickets_remain,normal_tickets_remain
+        from tickets,bus
+        where tickets.bus_id=bus.bus_id and bus.start=#{startStationId} and bus.dest=#{destStationId}
+            and tickets.bus_date=date(#{date});
+    </select>
+
+    <select id="selectTicketsByIdAndDate"  resultMap="TicketsResult">
+        <include refid="selectTicketsVo"/>
+        where bus_id=#{busId} and bus_date=date(#{startDate})
+    </select>
+</mapper>
