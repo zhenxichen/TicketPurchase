@@ -2,6 +2,7 @@ package com.ruoyi.user.mapper;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.user.domain.dto.UserManageDTO;
+import com.ruoyi.user.domain.vo.UserExcelVO;
 
 import java.util.List;
 
@@ -16,6 +17,4 @@ public interface UserManageMapper {
      * @return
      */
     List<UserManageDTO> selectUserList(SysUser user);
-
-
 }

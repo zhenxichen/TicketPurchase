@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ruoyi.user.domain.dto.UserManageDTO;
+import com.ruoyi.user.domain.vo.UserExcelVO;
 import com.ruoyi.user.service.IUserManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -76,8 +77,8 @@ public class SysUserController extends BaseController
     @GetMapping("/export")
     public AjaxResult export(SysUser user)
     {
-        List<SysUser> list = userService.selectUserList(user);
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+        List<UserExcelVO> list = userManageService.selectUserExportList(user);
+        ExcelUtil<UserExcelVO> util = new ExcelUtil<>(UserExcelVO.class);
         return util.exportExcel(list, "用户数据");
     }
 
