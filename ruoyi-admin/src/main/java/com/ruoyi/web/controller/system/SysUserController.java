@@ -2,6 +2,10 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.ruoyi.user.domain.dto.UserManageDTO;
+import com.ruoyi.user.domain.vo.UserExcelVO;
+import com.ruoyi.user.service.IUserManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -53,6 +57,9 @@ public class SysUserController extends BaseController
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private IUserManageService userManageService;
+
     /**
      * 获取用户列表
      */
@@ -61,7 +68,7 @@ public class SysUserController extends BaseController
     public TableDataInfo list(SysUser user)
     {
         startPage();
-        List<SysUser> list = userService.selectUserList(user);
+        List<UserManageDTO> list = userManageService.selectUserList(user);
         return getDataTable(list);
     }
 
@@ -70,8 +77,8 @@ public class SysUserController extends BaseController
     @GetMapping("/export")
     public AjaxResult export(SysUser user)
     {
-        List<SysUser> list = userService.selectUserList(user);
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+        List<UserExcelVO> list = userManageService.selectUserExportList(user);
+        ExcelUtil<UserExcelVO> util = new ExcelUtil<>(UserExcelVO.class);
         return util.exportExcel(list, "用户数据");
     }
 
@@ -80,19 +87,19 @@ public class SysUserController extends BaseController
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
     {
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        List<SysUser> userList = util.importExcel(file.getInputStream());
+        ExcelUtil<UserExcelVO> util = new ExcelUtil<>(UserExcelVO.class);
+        List<UserExcelVO> userList = util.importExcel(file.getInputStream());
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         String operName = loginUser.getUsername();
-        String message = userService.importUser(userList, updateSupport, operName);
+        String message = userManageService.importUser(userList, updateSupport, operName);
         return AjaxResult.success(message);
     }
 
     @GetMapping("/importTemplate")
     public AjaxResult importTemplate()
     {
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        return util.importTemplateExcel("用户数据");
+        ExcelUtil<UserExcelVO> util = new ExcelUtil<>(UserExcelVO.class);
+        return util.importTemplateExcel("用户数据模板");
     }
 
     /**
