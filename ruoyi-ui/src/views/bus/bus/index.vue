@@ -20,38 +20,20 @@
         />
       </el-form-item>
       <el-form-item label="发车时间" prop="startTime">
-        <el-date-picker clearable size="small"
+        <el-time-picker clearable size="small"
           v-model="queryParams.startTime"
-          type="date"
-          value-format="yyyy-MM-dd"
+          type="time"
+          value-format="HH:mm:ss"
           placeholder="选择发车时间">
-        </el-date-picker>
+        </el-time-picker>
       </el-form-item>
       <el-form-item label="到达时间" prop="endTime">
-        <el-date-picker clearable size="small"
+        <el-time-picker clearable size="small"
           v-model="queryParams.endTime"
-          type="date"
-          value-format="yyyy-MM-dd"
+          type="time"
+          value-format="HH:mm:ss"
           placeholder="选择到达时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="间隔天数" prop="day">
-        <el-input
-          v-model="queryParams.day"
-          placeholder="请输入间隔天数"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="默认座位数" prop="seat">
-        <el-input
-          v-model="queryParams.seat"
-          placeholder="请输入默认座位数"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        </el-time-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -113,12 +95,12 @@
       <el-table-column label="终点站编号" align="center" prop="dest" />
       <el-table-column label="发车时间" align="center" prop="startTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.startTime, '{h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="到达时间" align="center" prop="endTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.endTime, '{h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="间隔天数" align="center" prop="day" />
@@ -163,16 +145,16 @@
         <el-form-item label="发车时间" prop="startTime">
           <el-date-picker clearable size="small"
             v-model="form.startTime"
-            type="date"
-            value-format="yyyy-MM-dd"
+            type="time"
+            value-format="HH:mm:ss"
             placeholder="选择发车时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="到达时间" prop="endTime">
           <el-date-picker clearable size="small"
             v-model="form.endTime"
-            type="date"
-            value-format="yyyy-MM-dd"
+            type="time"
+            value-format="HH:mm:ss"
             placeholder="选择到达时间">
           </el-date-picker>
         </el-form-item>
