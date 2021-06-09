@@ -57,4 +57,13 @@ public interface IUserManageService {
      * @return
      */
     int updateUser(SysUser user, UserExcelVO vo);
+
+    /**
+     * 为用户进行充值
+     *
+     * @param id 充值的用户ID数组
+     * @param amount 充值金额
+     * @return 成功修改的条数
+     */
+    int recharge(Long[] id, int amount);
 }

@@ -125,3 +125,12 @@ export function importTemplate() {
     method: 'get'
   })
 }
+
+// 用户批量充值
+export function userRecharge(data) {
+  return request({
+    url: '/system/user/recharge',
+    method: 'post',
+    data: data
+  })
+}

@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ruoyi.user.domain.dto.RechargeDTO;
 import com.ruoyi.user.domain.dto.UserManageDTO;
 import com.ruoyi.user.domain.vo.UserExcelVO;
 import com.ruoyi.user.service.IUserManageService;
@@ -39,7 +40,7 @@ import com.ruoyi.system.service.ISysUserService;
 /**
  * 用户信息
  * 
- * @author ruoyi
+ * @author Zhenxi Chen
  */
 @RestController
 @RequestMapping("/system/user")
@@ -208,5 +209,16 @@ public class SysUserController extends BaseController
         userService.checkUserAllowed(user);
         user.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(userService.updateUserStatus(user));
+    }
+
+    /**
+     * 充值接口
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:recharge')")
+    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
+    @PostMapping("/recharge")
+    public AjaxResult recharge(@RequestBody RechargeDTO dto) {
+        return toAjax(userManageService.recharge(dto.getUserIds(), dto.getAmount()));
     }
 }

@@ -174,5 +174,22 @@ public class UserManageServiceImpl implements IUserManageService {
         return userMapper.updateUser(user);
     }
 
+    /**
+     * 为用户进行充值
+     *
+     * @param ids 充值的用户ID数组
+     * @param amount 充值金额
+     * @return 成功修改的条数
+     */
+    @Override
+    public int recharge(Long[] ids, int amount) {
+        int count = 0;
+        for (Long id: ids) {
+            UserInfo userInfo = userInfoService.selectUserInfoById(id);
+            userInfo.setBalance(userInfo.getBalance() + amount);
+            count += userInfoService.updateUserInfo(userInfo);
+        }
+        return count;
+    }
 
 }

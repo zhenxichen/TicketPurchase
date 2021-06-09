@@ -124,6 +124,15 @@
               v-hasPermi="['system:user:export']"
             >导出</el-button>
           </el-col>
+          <el-col :span="1.5">
+            <el-button
+              type="info"
+              plain
+              icon="el-icon-wallet"
+              size="mini"
+              @click="recharge.open = true"
+            >充值</el-button>
+          </el-col>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
         </el-row>
 
@@ -288,11 +297,20 @@
         <el-button @click="upload.open = false">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 充值对话框 -->
+    <el-dialog :title="recharge.title" :visible.sync="recharge.open" width="400px" append-to-body>
+      <el-input-number v-model="recharge.amount" />
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleRecharge">确 定</el-button>
+        <el-button @click="recharge.open = false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listUser, getUser, delUser, addUser, updateUser, exportUser, resetUserPwd, changeUserStatus, importTemplate } from "@/api/system/user";
+import { listUser, getUser, delUser, addUser, updateUser, exportUser, resetUserPwd, changeUserStatus, importTemplate, userRecharge } from "@/api/system/user";
 import { getToken } from "@/utils/auth";
 import { treeselect } from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
@@ -396,6 +414,11 @@ export default {
             trigger: "blur"
           }
         ]
+      },
+      recharge: {
+        open: false,
+        amount: 0,
+        title: "充值"
       }
     };
   },
@@ -611,6 +634,26 @@ export default {
     // 提交上传文件
     submitFileForm() {
       this.$refs.upload.submit();
+    },
+    // 充值操作处理
+    handleRecharge() {
+      const that = this;
+      const userIds = that.ids;
+      let data = {};
+      data['userIds'] = userIds;
+      data['amount'] = that.recharge.amount;
+      console.log(data);
+      this.$confirm('是否确认为用户编号为"' + userIds + '"的用户充值' + that.recharge.amount + '元?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return userRecharge(data);
+        }).then(() => {
+          that.recharge.open = false;
+          this.msgSuccess("充值成功");
+          this.resetQuery();
+        })
     }
   }
 };
