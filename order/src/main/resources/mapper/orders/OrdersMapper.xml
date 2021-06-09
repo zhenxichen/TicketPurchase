@@ -14,9 +14,63 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="verifyTime"    column="verify_time"    />
     </resultMap>
 
+    <resultMap id="UserOrdersResult" type="UserOrdersDTO">
+        <result property="orderID"    column="order_id"    />
+        <result property="busID"    column="bus"    />
+        <result property="date"    column="date"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="destTime"    column="end_time"    />
+        <result property="start"    column="start"    />
+        <result property="dest"    column="dest"    />
+        <result property="price"    column="price"    />
+        <result property="ticketStatus"    column="status"    />
+    </resultMap>
+
     <sql id="selectOrdersVo">
         select order_id, user_id, status, bus, date, create_time, verify_time from orders
     </sql>
+
+    <sql id="selectNormalOrdersVo">
+        SELECT * FROM (
+            SELECT `order_id`,`user_id`,`bus`,`date`,`start_time`,`end_time`,`start_station` AS `start`,station_name AS `dest`,`normal_price` AS `price` ,`status`
+            FROM (SELECT `order_id`,`user_id`,`bus`,`date`,`start_time`,`end_time`,`start`,`station_name` AS start_station,`dest`,`normal_price`,`status`
+                  FROM (orders JOIN bus ON (bus.bus_id=orders.bus)) JOIN tickets ON (bus=tickets.`bus_id` AND `date`=tickets.`bus_date`)
+                        JOIN station ON (`start`=station_id)
+                  ) AS t1 JOIN station ON (`dest`=station_id)
+        )AS t2
+    </sql>
+
+    <select id="selectNormalOrdersList" parameterType="OrdersInfo" resultMap="UserOrdersResult">
+        <include refid="selectNormalOrdersVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="orderID != null "> and order_id = #{orderID}</if>
+            <if test="date != null "> and date = #{date}</if>
+            <if test="start != null "> and start = #{start}</if>
+            <if test="dest != null "> and dest = #{dest}</if>
+        </where>
+    </select>
+
+    <sql id="selectEmployeeOrdersVo">
+        SELECT * FROM (
+            SELECT `order_id`,`user_id`,`bus`,`date`,`start_time`,`end_time`,`start_station` AS `start`,station_name AS `dest`,`employee_price` AS `price`,`status`
+            FROM (SELECT `order_id`,`user_id`,`bus`,`date`,`start_time`,`end_time`,`start`,`station_name` AS start_station,`dest`,`employee_price`,`status`
+                  FROM (orders JOIN bus ON (bus.bus_id=orders.bus)) JOIN tickets ON (bus=tickets.`bus_id` AND `date`=tickets.`bus_date`)
+                        JOIN station ON (`start`=station_id)
+                  ) AS t1 JOIN station ON (`dest`=station_id)
+        )AS t2
+    </sql>
+
+    <select id="selectEmployeeOrdersList" parameterType="OrdersInfo" resultMap="UserOrdersResult">
+        <include refid="selectEmployeeOrdersVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="orderID != null "> and order_id = #{orderID}</if>
+            <if test="date != null "> and date = #{date}</if>
+            <if test="start != null "> and start = #{start}</if>
+            <if test="dest != null "> and dest = #{dest}</if>
+        </where>
+    </select>
 
     <select id="selectOrdersList" parameterType="Orders" resultMap="OrdersResult">
         <include refid="selectOrdersVo"/>
@@ -38,7 +92,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select `status` from orders where order_id = #{orderID,jdbcType=VARCHAR}
     </select>
 
-        
     <insert id="insertOrders" parameterType="Orders">
         insert into orders
         <trim prefix="(" suffix=")" suffixOverrides=",">

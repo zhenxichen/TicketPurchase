@@ -2,7 +2,10 @@ package com.ruoyi.orders.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.orders.domain.OrderInfo;
+import com.ruoyi.orders.domain.OrdersInfo;
 import com.ruoyi.orders.domain.dto.SellCodeDTO;
+import com.ruoyi.orders.domain.dto.UserOrdersDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.orders.mapper.OrdersMapper;
@@ -108,5 +111,31 @@ public class OrdersServiceImpl implements IOrdersService
         String ticketStatus = ordersMapper.selectStatusById(orderID);
         res.setTicketStatus(ticketStatus);
         return res;
+    }
+
+    /**
+     * @Description 获取普通用户订单列表
+     * @param userOrder
+     * @return 结果list
+     * @author Mei Huang
+     * @date 2021/6/8
+     */
+    @Override
+    public  List<UserOrdersDTO> selectNormalOrdersList(OrdersInfo userOrder){
+        List<UserOrdersDTO> resList = ordersMapper.selectNormalOrdersList(userOrder);
+        return resList;
+    }
+
+    /**
+     * @Description 获取员工用户订单列表
+     * @param userOrder
+     * @return 结果list
+     * @author Mei Huang
+     * @date 2021/6/8
+     */
+    @Override
+    public  List<UserOrdersDTO> selectEmployeeOrdersList(OrdersInfo userOrder){
+        List<UserOrdersDTO> resList = ordersMapper.selectEmployeeOrdersList(userOrder);
+        return resList;
     }
 }
