@@ -1,6 +1,7 @@
 package com.ruoyi.announce.service.impl;
 
 import com.ruoyi.announce.domain.vo.AnnounceListVO;
+import com.ruoyi.announce.domain.vo.AnnounceVO;
 import com.ruoyi.announce.service.IAnnounceService;
 import com.ruoyi.announce.util.AnnounceFormatUtil;
 import com.ruoyi.system.domain.SysNotice;
@@ -35,5 +36,16 @@ public class AnnounceServiceImpl implements IAnnounceService {
             list.add(AnnounceFormatUtil.sysNoticeToAnnounceListVO(sysNotice));
         }
         return list;
+    }
+
+    /**
+     * 根据公告ID获取公告详情
+     * @param id 公告ID
+     * @return
+     */
+    @Override
+    public AnnounceVO selectAnnounceById(Long id) {
+        SysNotice notice = noticeService.selectNoticeById(id);
+        return AnnounceFormatUtil.sysNoticeToAnnounceVO(notice);
     }
 }

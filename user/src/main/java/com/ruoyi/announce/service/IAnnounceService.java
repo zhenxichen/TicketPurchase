@@ -1,6 +1,7 @@
 package com.ruoyi.announce.service;
 
 import com.ruoyi.announce.domain.vo.AnnounceListVO;
+import com.ruoyi.announce.domain.vo.AnnounceVO;
 
 import java.util.List;
 
@@ -15,4 +16,11 @@ public interface IAnnounceService {
      * 获取公告标题列表
      */
     List<AnnounceListVO> selectAnnounceTitleList();
+
+    /**
+     * 根据公告ID获取公告详情
+     * @param id 公告ID
+     * @return
+     */
+    AnnounceVO selectAnnounceById(Long id);
 }

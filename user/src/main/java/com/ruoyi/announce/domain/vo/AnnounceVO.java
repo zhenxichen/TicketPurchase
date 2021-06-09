@@ -9,7 +9,7 @@ import java.util.Date;
  * @date 2021/6/8
  */
 public class AnnounceVO {
-    private Long id;
+    private Long annoId;
 
     private String title;
 
@@ -17,12 +17,12 @@ public class AnnounceVO {
 
     private Date time;
 
-    public Long getId() {
-        return id;
+    public Long getAnnoId() {
+        return annoId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setAnnoId(Long annoId) {
+        this.annoId = annoId;
     }
 
     public String getTitle() {

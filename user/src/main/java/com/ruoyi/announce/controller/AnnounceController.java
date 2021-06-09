@@ -1,6 +1,7 @@
 package com.ruoyi.announce.controller;
 
 import com.ruoyi.announce.domain.vo.AnnounceListVO;
+import com.ruoyi.announce.domain.vo.AnnounceVO;
 import com.ruoyi.announce.service.IAnnounceService;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.SysNotice;
@@ -48,8 +49,9 @@ public class AnnounceController {
     @GetMapping("/query")
     @PreAuthorize("@ss.hasPermi('system:notice:query')")
     public AjaxResult announceDetail(@RequestParam("id") String id) {
-        Long announceId = Long.valueOf(id);
+        AnnounceVO vo = announceService.selectAnnounceById(Long.valueOf(id));
         AjaxResult ajax = AjaxResult.success();
+        ajax.put("announce", vo);
         return ajax;
     }
 }
