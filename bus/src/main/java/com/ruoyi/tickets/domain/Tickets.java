@@ -21,6 +21,7 @@ public class Tickets extends BaseEntity
     private String busId;
 
     /** 发车日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date busDate;
 
     /** 座位数 */
@@ -50,6 +51,9 @@ public class Tickets extends BaseEntity
     /** 普通票价格 */
     @Excel(name = "普通票价格")
     private Long normalPrice;
+
+    /** 司机  */
+    private Long driver;
 
     public void setBusId(String busId) 
     {
@@ -131,6 +135,14 @@ public class Tickets extends BaseEntity
     public Long getNormalPrice() 
     {
         return normalPrice;
+    }
+
+    public Long getDriver() {
+        return driver;
+    }
+
+    public void setDriver(Long driver) {
+        this.driver = driver;
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.ruoyi.tickets.service;
 import com.ruoyi.tickets.domain.DTO.TicketDTO;
 import com.ruoyi.tickets.domain.TicketOrder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

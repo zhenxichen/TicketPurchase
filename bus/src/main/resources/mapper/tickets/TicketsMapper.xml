@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.tickets.mapper.TicketsMapper">
-    
+
     <resultMap type="Tickets" id="TicketsResult">
         <result property="busId"    column="bus_id"    />
         <result property="busDate"    column="bus_date"    />
@@ -14,10 +14,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="normalTicketsRemain"    column="normal_tickets_remain"    />
         <result property="employeePrice"    column="employee_price"    />
         <result property="normalPrice"    column="normal_price"    />
+        <result property="driver"    column="driver"    />
     </resultMap>
 
     <sql id="selectTicketsVo">
-        select bus_id, bus_date, seat, employee_tickets, normal_tickets, employee_tickets_remain, normal_tickets_remain, employee_price, normal_price from tickets
+        select bus_id, bus_date, seat, employee_tickets, normal_tickets, employee_tickets_remain, normal_tickets_remain, employee_price, normal_price, driver from tickets
     </sql>
 
     <select id="selectTicketsList" parameterType="Tickets" resultMap="TicketsResult">
@@ -30,9 +31,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="normalTicketsRemain != null "> and normal_tickets_remain = #{normalTicketsRemain}</if>
             <if test="employeePrice != null "> and employee_price = #{employeePrice}</if>
             <if test="normalPrice != null "> and normal_price = #{normalPrice}</if>
+            <if test="driver != null "> and driver = #{driver}</if>
         </where>
     </select>
-
 
 
     <select id="selectTicketsById" parameterType="String" resultMap="TicketsResult">
@@ -52,6 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="normalTicketsRemain != null">normal_tickets_remain,</if>
             <if test="employeePrice != null">employee_price,</if>
             <if test="normalPrice != null">normal_price,</if>
+            <if test="driver != null">driver,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="busId != null">#{busId},</if>
@@ -63,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="normalTicketsRemain != null">#{normalTicketsRemain},</if>
             <if test="employeePrice != null">#{employeePrice},</if>
             <if test="normalPrice != null">#{normalPrice},</if>
+            <if test="driver != null">#{driver},</if>
          </trim>
     </insert>
 
@@ -77,8 +80,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="normalTicketsRemain != null">normal_tickets_remain = #{normalTicketsRemain},</if>
             <if test="employeePrice != null">employee_price = #{employeePrice},</if>
             <if test="normalPrice != null">normal_price = #{normalPrice},</if>
+            <if test="driver != null">driver = #{driver},</if>
         </trim>
-        where bus_id = #{busId}
+        where bus_id = #{busId} and bus_date = #{busDate}
     </update>
 
     <delete id="deleteTicketsById" parameterType="String">

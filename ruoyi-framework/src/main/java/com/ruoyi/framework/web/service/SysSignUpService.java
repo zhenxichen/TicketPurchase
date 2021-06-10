@@ -46,6 +46,7 @@ public class SysSignUpService {
 
     /**
      * 校验注册信息是否合法
+     *
      * @param user SysUser对象
      * @return 是否合法
      */

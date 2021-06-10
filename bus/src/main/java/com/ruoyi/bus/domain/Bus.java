@@ -29,12 +29,12 @@ public class Bus extends BaseEntity
     private Long dest;
 
     /** 发车时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "HH:mm:ss", timezone = "GMT+8")
     @Excel(name = "发车时间", width = 30, dateFormat = "HH:mm:ss")
     private Date startTime;
 
     /** 到达时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "HH:mm:ss", timezone = "GMT+8")
     @Excel(name = "到达时间", width = 30, dateFormat = "HH:mm:ss")
     private Date endTime;
 

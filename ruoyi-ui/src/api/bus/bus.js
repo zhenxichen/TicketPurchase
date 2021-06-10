@@ -51,3 +51,27 @@ export function exportBus(query) {
     params: query
   })
 }
+
+// 获取车站列表
+export function listStation() {
+  return request({
+    url: '/station/station/list',
+    method: 'get'
+  })
+}
+
+// 设置车票量
+export function setTicket(data) {
+  return request({
+    url: '/tickets/tickets',
+    method: 'post',
+    data: data
+  })
+}
+
+export function driverList() {
+  return request({
+    url: '/tickets/tickets/driver',
+    method: 'get',
+  })
+}

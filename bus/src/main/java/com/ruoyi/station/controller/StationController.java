@@ -33,30 +33,12 @@ public class StationController extends BaseController
     @Autowired
     private IStationService stationService;
 
-//    /**
-//     * 查询车站列表
-//     */
-//    @PreAuthorize("@ss.hasPermi('station:station:list')")
-//    @GetMapping("/list")
-//    public TableDataInfo list(Station station)
-//    {
-//        startPage();
-//        List<Station> list = stationService.selectStationList(station);
-//        return getDataTable(list);
-//    }
-
-//    /**
-//     * 导出车站列表
-//     */
-//    @PreAuthorize("@ss.hasPermi('station:station:export')")
-//    @Log(title = "车站", businessType = BusinessType.EXPORT)
-//    @GetMapping("/export")
-//    public AjaxResult export(Station station)
-//    {
-//        List<Station> list = stationService.selectStationList(station);
-//        ExcelUtil<Station> util = new ExcelUtil<Station>(Station.class);
-//        return util.exportExcel(list, "车站数据");
-//    }
+    @GetMapping("/list")
+    public AjaxResult list(Station station)
+    {
+        List<Station> list = stationService.selectStationList(station);
+        return AjaxResult.success(list);
+    }
 
     /**
      * 获取车站详细信息

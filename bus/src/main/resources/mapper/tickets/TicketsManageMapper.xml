@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ruoyi.tickets.mapper.TicketsManageMapper">
+
+    <resultMap type="Tickets" id="TicketsResult">
+        <result property="busId"    column="bus_id"    />
+        <result property="busDate"    column="bus_date"    />
+        <result property="seat"    column="seat"    />
+        <result property="employeeTickets"    column="employee_tickets"    />
+        <result property="normalTickets"    column="normal_tickets"    />
+        <result property="employeeTicketsRemain"    column="employee_tickets_remain"    />
+        <result property="normalTicketsRemain"    column="normal_tickets_remain"    />
+        <result property="employeePrice"    column="employee_price"    />
+        <result property="normalPrice"    column="normal_price"    />
+        <result property="driver" column="driver" />
+    </resultMap>
+
+    <resultMap id="DriverResult" type="Driver">
+        <result property="id" column="user_id" />
+        <result property="name" column="name" />
+    </resultMap>
+
+    <sql id="selectTicketsVo">
+        select bus_id, bus_date, seat, employee_tickets, normal_tickets, employee_tickets_remain, normal_tickets_remain, employee_price, normal_price, driver from tickets
+    </sql>
+
+    <select id="selectTicketsByIdAndDate" parameterType="BusIdAndDateDAO" resultMap="TicketsResult">
+        <include refid="selectTicketsVo"/>
+        where bus_id = #{busId, jdbcType=VARCHAR}
+        and bus_date = #{busDate, jdbcType=DATE}
+    </select>
+
+    <select id="selectDriverList" resultMap="DriverResult">
+        SELECT u.user_id as user_id, u.nick_name as `name`
+        FROM sys_user u
+        JOIN sys_user_role ur ON u.user_id = ur.user_id
+        WHERE ur.role_id = 101
+    </select>
+
+</mapper>

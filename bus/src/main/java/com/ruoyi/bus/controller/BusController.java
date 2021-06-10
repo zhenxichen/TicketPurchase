@@ -1,6 +1,9 @@
 package com.ruoyi.bus.controller;
 
 import java.util.List;
+
+import com.ruoyi.bus.domain.vo.BusManageVO;
+import com.ruoyi.bus.service.IBusManageService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +26,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 /**
  * 车次管理Controller
  * 
- * @author ruoyi
+ * @author Zhenxi Chen
  * @date 2021-06-05
  */
 @RestController
@@ -33,15 +36,17 @@ public class BusController extends BaseController
     @Autowired
     private IBusService busService;
 
+    @Autowired
+    private IBusManageService busManageService;
+
     /**
      * 查询车次管理列表
      */
-    //@PreAuthorize("@ss.hasPermi('bus:bus:list')")
     @GetMapping("/list")
     public TableDataInfo list(Bus bus)
     {
         startPage();
-        List<Bus> list = busService.selectBusList(bus);
+        List<BusManageVO> list = busManageService.selectBusList(bus);
         return getDataTable(list);
     }
 

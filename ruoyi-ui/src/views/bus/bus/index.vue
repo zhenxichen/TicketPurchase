@@ -1,39 +1,25 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="始发站编号" prop="start">
-        <el-input
-          v-model="queryParams.start"
-          placeholder="请输入始发站编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="始发站" prop="start">
+        <el-select v-model="queryParams.start" placeholder="请选择始发站">
+          <el-option
+            v-for="item in stationList"
+            :key = "item.stationId"
+            :label="item.stationName"
+            :value="item.stationId"
+          ></el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="终点站编号" prop="dest">
-        <el-input
-          v-model="queryParams.dest"
-          placeholder="请输入终点站编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="发车时间" prop="startTime">
-        <el-time-picker clearable size="small"
-          v-model="queryParams.startTime"
-          type="time"
-          value-format="HH:mm:ss"
-          placeholder="选择发车时间">
-        </el-time-picker>
-      </el-form-item>
-      <el-form-item label="到达时间" prop="endTime">
-        <el-time-picker clearable size="small"
-          v-model="queryParams.endTime"
-          type="time"
-          value-format="HH:mm:ss"
-          placeholder="选择到达时间">
-        </el-time-picker>
+      <el-form-item label="终点站" prop="dest" placeholder="请选择终点站">
+        <el-select v-model="queryParams.dest">
+          <el-option
+            v-for="item in stationList"
+            :key = "item.stationId"
+            :label="item.stationName"
+            :value="item.stationId"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -105,7 +91,7 @@
       </el-table-column>
       <el-table-column label="间隔天数" align="center" prop="day" />
       <el-table-column label="默认座位数" align="center" prop="seat" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="200px">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -121,6 +107,12 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['bus:bus:remove']"
           >删除</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-date"
+            @click="handleTicket(scope.row)"
+          >票量</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -136,27 +128,45 @@
     <!-- 添加或修改车次管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="始发站编号" prop="start">
-          <el-input v-model="form.start" placeholder="请输入始发站编号" />
+        <el-form-item label="车次" prop="busId">
+          <el-input placeholder="请输入车次"
+            v-model="form.busId"
+            :disabled="disableBusId"
+          />
         </el-form-item>
-        <el-form-item label="终点站编号" prop="dest">
-          <el-input v-model="form.dest" placeholder="请输入终点站编号" />
+        <el-form-item label="始发站" prop="start">
+          <el-select v-model="form.start" placeholder="请选择始发站">
+            <el-option v-for="item in stationList" 
+              :key = "item.stationId"
+              :label="item.stationName"
+              :value="item.stationId"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="终点站" prop="dest">
+          <el-select v-model="form.dest" placeholder="请选择终点站">
+            <el-option v-for="item in stationList" 
+              :key = "item.stationId"
+              :label="item.stationName"
+              :value="item.stationId"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="发车时间" prop="startTime">
-          <el-date-picker clearable size="small"
+          <el-time-picker clearable size="small"
             v-model="form.startTime"
             type="time"
             value-format="HH:mm:ss"
             placeholder="选择发车时间">
-          </el-date-picker>
+          </el-time-picker>
         </el-form-item>
         <el-form-item label="到达时间" prop="endTime">
-          <el-date-picker clearable size="small"
+          <el-time-picker clearable size="small"
             v-model="form.endTime"
             type="time"
             value-format="HH:mm:ss"
             placeholder="选择到达时间">
-          </el-date-picker>
+          </el-time-picker>
         </el-form-item>
         <el-form-item label="间隔天数" prop="day">
           <el-input v-model="form.day" placeholder="请输入间隔天数" />
@@ -170,17 +180,82 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 车票量设定对话框 -->
+    <el-dialog title="车票量设定" :visible.sync="ticket.visible" width="700px" append-to-body>
+      <el-form ref="ticketForm" :model="ticketForm" :rules="ticketRules" :inline="true">
+        <el-form-item label="车次" prop="busId">
+          <el-input v-model="ticketForm.busId" placeholder="请输入车次" disabled/>
+        </el-form-item>
+        <el-form-item label="日期" prop="busDate">
+          <el-date-picker
+            v-model="ticketForm.busDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择发车日期" />
+        </el-form-item>
+        <el-form-item label="座位" prop="seat">
+          <el-input-number v-model="ticketForm.seat" />
+        </el-form-item>
+        <br>
+        <el-form-item label="员工票数量" prop="employeeTickets">
+          <el-input-number v-model="ticketForm.employeeTickets" />
+        </el-form-item>
+        <el-form-item label="普通票数量" prop="normalTickets">
+          <el-input-number v-model="ticketForm.normalTickets" />
+        </el-form-item>
+        <br>
+        <el-form-item label="剩余员工票数量" prop="employeeTicketsRemain">
+          <el-input-number v-model="ticketForm.employeeTicketsRemain" />
+        </el-form-item>
+        <el-form-item label="剩余普通票数量" prop="normalTicketsRemain">
+          <el-input-number v-model="ticketForm.normalTicketsRemain" />
+        </el-form-item>
+        <br>
+        <el-form-item label="员工票价格" prop="employeePrice">
+          <el-input-number v-model="ticketForm.employeePrice" />
+        </el-form-item>
+        <el-form-item label="普通票价格" prop="normalPrice">
+          <el-input-number v-model="ticketForm.normalPrice" />
+        </el-form-item>
+        <br>
+        <el-form-item label="司机" prop="driver">
+          <el-select placeholder="请选择司机" v-model="ticketForm.driver">
+            <el-option v-for="item in driver"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitTicketForm">确 定</el-button>
+        <el-button @click="cancelTicket">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listBus, getBus, delBus, addBus, updateBus, exportBus } from "@/api/bus/bus";
+import { listBus, getBus, delBus, addBus, updateBus, exportBus, listStation, setTicket, driverList } from "@/api/bus/bus";
 
 export default {
   name: "Bus",
   components: {
   },
   data() {
+    const destValidator = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请选择终点站'));
+      } else if (value === this.form.start) {
+        callback(new Error('始发站与终点站不能相同'));
+      } else {
+        callback();
+      }
+    };
+    const testValidator = (rule, value, callback) => {
+      console.log("value", value);
+    }
     return {
       // 遮罩层
       loading: true,
@@ -217,11 +292,11 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        start: [
-          { required: true, message: "始发站编号不能为空", trigger: "blur" }
-        ],
+        busId: [{ required: true, message: "车次不能为空", trigger: "blur" }],
+        start: [{ required: true, message: "始发站编号不能为空", trigger: "blur" }],
         dest: [
-          { required: true, message: "终点站编号不能为空", trigger: "blur" }
+          { required: true, message: "终点站编号不能为空", trigger: "blur" },
+          { required: true, validator: destValidator, trigger: 'blur' }
         ],
         startTime: [
           { required: true, message: "发车时间不能为空", trigger: "blur" }
@@ -232,11 +307,44 @@ export default {
         day: [
           { required: true, message: "间隔天数不能为空", trigger: "blur" }
         ],
-      }
+      },
+      // 车站列表
+      stationList: [],
+      oper: '',   // 当前操作（add或update）
+      disableBusId: false,    // 是否可以修改busId
+      // 车票量管理对话框
+      ticket: {
+        visible: false,
+      },
+      ticketForm: {
+        busId: '',    // 车次
+        busDate: undefined,   // 日期
+        seat: undefined,      // 座位数
+        employeeTickets: undefined,     // 员工票数量
+        normalTickets: undefined,       // 普通票数量
+        employeeTicketsRemain: undefined,   // 剩余员工票数量
+        normalTicketsRemain: undefined,     // 剩余普通票数量
+        employeePrice: undefined,           // 员工票价格
+        normalPrice: undefined,             // 普通票价格
+        driver: undefined,              // 司机
+      },
+      ticketRules: {
+        busDate: [{ required: true, message: "日期不能为空" }],
+        seat: [{ required: true, message: "座位数不能为空", trigger: "blur" }],
+        employeeTickets: [{ required: true, message: "员工票数量不能为空", trigger: "blur" }],
+        normalTickets: [{ required: true, message: "普通票数量不能为空", trigger: "blur" }],
+        employeeTicketsRemain: [{ required: true, message: "剩余员工票数量不能为空", trigger: "blur" }],
+        normalTicketsRemain: [{ required: true, message: "剩余普通票数量不能为空", trigger: "blur" }],
+        employeePrice: [{ required: true, message: "员工票价格不能为空", trigger: "blur" }],
+        normalPrice: [{ required: true, message: "普通票价格不能为空", trigger: "blur" }],
+        driver: [{ required: true, message: "司机不能为空", trigger: "blur" }]
+      },
+      driver: [],
     };
   },
   created() {
     this.getList();
+    this.getDriverList();
   },
   methods: {
     /** 查询车次管理列表 */
@@ -247,6 +355,10 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+      listStation().then(response => {
+        this.stationList = response.data;
+        console.log(response);
+      })
     },
     // 取消按钮
     cancel() {
@@ -269,6 +381,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      console.log(this.queryParams);
       this.getList();
     },
     /** 重置按钮操作 */
@@ -286,11 +399,15 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
+      this.oper = 'add';
+      this.disableBusId = false;
       this.title = "添加车次管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.oper = 'update';
+      this.disableBusId = true;
       const busId = row.busId || this.ids
       getBus(busId).then(response => {
         this.form = response.data;
@@ -302,7 +419,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.busId != null) {
+          if (this.oper === 'update') {
             updateBus(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
@@ -346,6 +463,49 @@ export default {
           this.download(response.msg);
           this.exportLoading = false;
         })
+    },
+    handleTicket(row) {
+      this.resetTicketForm();
+      this.ticketForm.busId = row.busId;
+      this.ticket.visible = true;
+      console.log(this.ticket);
+    },
+    resetTicketForm() {
+      this.ticketForm = {
+        busId: '',    
+        busDate: undefined,   
+        seat: undefined,      
+        employeeTickets: undefined,     
+        normalTickets: undefined,       
+        employeeTicketsRemain: undefined,   
+        normalTicketsRemain: undefined,     
+        employeePrice: undefined,           
+        normalPrice: undefined,             
+      }
+    },
+    submitTicketForm() {
+      const that = this;
+      this.$refs["ticketForm"].validate(valid => {
+        console.log(valid);
+        if (valid) {
+          setTicket(this.ticketForm)
+            .then(response => {
+              that.msgSuccess("设置成功");
+              that.resetTicketForm();
+              that.ticket.visible = false;
+            });
+        }
+      })
+    },
+    cancelTicket() {
+      this.resetTicketForm();
+      this.ticket.visible = false;
+    },
+    getDriverList() {
+      const that = this;
+      driverList().then(response => {
+        that.driver = response.data;
+      })
     }
   }
 };

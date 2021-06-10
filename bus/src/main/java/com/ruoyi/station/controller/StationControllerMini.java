@@ -40,7 +40,7 @@ public class StationControllerMini
     /**
      * 查询车站列表
      */
-    //@PreAuthorize("@ss.hasPermi('station:station:list')")
+    @PreAuthorize("@ss.hasPermi('station:station:list')")
     @GetMapping("/list")
     public AjaxResult list(Station station)
     {

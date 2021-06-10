@@ -27,7 +27,7 @@ public interface IStationService
      * @param station 车站
      * @return 车站集合
      */
-    public List<StationDTO> selectStationList(Station station);
+    public List<Station> selectStationList(Station station);
 
     /**
      * 新增车站

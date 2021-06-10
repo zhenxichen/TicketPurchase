@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bus.mapper.BusManageMapper">
+    <resultMap id="BusVOResult" type="com.ruoyi.bus.domain.vo.BusManageVO">
+        <result property="busId"    column="bus_id"    />
+        <result property="start"    column="start"    />
+        <result property="dest"    column="dest"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="day"    column="day"    />
+        <result property="seat"    column="seat"    />
+    </resultMap>
+
+    <sql id="selectBusVo">
+        SELECT
+            B.bus_id, S.station_name as `start`, D.station_name as `dest`,
+            B.start_time, B.end_time, B.`day`, B.seat
+        FROM bus B
+        JOIN station S ON B.`start` = S.station_id
+        JOIN station D ON B.`dest` = D.station_id
+    </sql>
+
+    <select id="selectBusList" parameterType="Bus" resultMap="BusVOResult">
+        <include refid="selectBusVo"/>
+        <where>
+            <if test="start != null "> AND B.start = #{start}</if>
+            <if test="dest != null "> AND B.dest = #{dest}</if>
+            <if test="startTime != null "> AND B.start_time = #{startTime}</if>
+            <if test="endTime != null "> AND B.end_time = #{endTime}</if>
+            <if test="day != null "> AND B.day = #{day}</if>
+            <if test="seat != null "> AND B.seat = #{seat}</if>
+        </where>
+    </select>
+</mapper>
