@@ -3,11 +3,17 @@ package com.ruoyi.framework.web.service;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.exception.user.SignUpException;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.system.domain.SysUserRole;
 import com.ruoyi.system.domain.UserInfo;
+import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.service.IUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 注册方法
@@ -24,6 +30,9 @@ public class SysSignUpService {
     @Autowired
     private IUserInfoService infoService;
 
+    @Autowired
+    private SysUserRoleMapper userRoleMapper;
+
     /**
      * 进行账号注册
      * @param phoneNumber 手机号
@@ -32,9 +41,12 @@ public class SysSignUpService {
      */
     public void signUp(String phoneNumber, String password, String username) {
         SysUser user = new SysUser();
+        if (phoneNumber == null || password == null || username == null) {
+            throw new SignUpException(SignUpException.REQUEST_FORMAT_ERROR);
+        }
         user.setPhonenumber(phoneNumber);
         user.setUserName(username);
-        user.setPassword(password);
+        user.setPassword(SecurityUtils.encryptPassword(password));
         user.setNickName(username);     // 由于RuoYi自带的用户表结构必须填写nickname，因此使用username代替
         checkSignUpInfoValid(user);     // 校验用户名和手机号是否重复
         userService.insertUser(user);
@@ -42,6 +54,12 @@ public class SysSignUpService {
         UserInfo info = new UserInfo();
         info.setUserId(user.getUserId());
         infoService.insertUserInfo(info);
+        SysUserRole userRole = new SysUserRole();
+        userRole.setUserId(user.getUserId());
+        userRole.setRoleId(100L);
+        List<SysUserRole> list = new ArrayList<>();
+        list.add(userRole);
+        userRoleMapper.batchUserRole(list);
     }
 
     /**
