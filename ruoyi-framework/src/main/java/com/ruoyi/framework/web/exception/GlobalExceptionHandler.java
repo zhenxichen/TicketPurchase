@@ -124,6 +124,8 @@ public class GlobalExceptionHandler {
             return AjaxResult.error("用户名已存在");
         } else if (e.getType() == SignUpException.PHONE_NUMBER_EXISTED) {
             return AjaxResult.error("手机号已存在");
+        } else if (e.getType() == SignUpException.REQUEST_FORMAT_ERROR) {
+            return AjaxResult.error("输入参数类型错误");
         } else {
             return AjaxResult.error("注册失败");
         }

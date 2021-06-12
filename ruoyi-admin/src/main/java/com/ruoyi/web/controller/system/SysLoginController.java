@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Set;
 
 import com.ruoyi.common.core.domain.model.*;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.system.domain.UserInfo;
+import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.IUserInfoService;
+import org.apache.commons.collections4.Get;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysMenu;
@@ -27,6 +29,12 @@ import com.ruoyi.system.service.ISysMenuService;
 @RestController
 public class SysLoginController
 {
+    @Autowired
+    private ISysUserService userService;
+
+    @Autowired
+    private IUserInfoService iuserInfoService;
+
     @Autowired
     private SysLoginService loginService;
 
@@ -122,5 +130,15 @@ public class SysLoginController
         SysUser user = loginUser.getUser();
         List<SysMenu> menus = menuService.selectMenuTreeByUserId(user.getUserId());
         return AjaxResult.success(menuService.buildMenus(menus));
+    }
+
+    @GetMapping("getOpenid")
+    public AjaxResult getOpenid(@RequestParam("openId")String openId){
+        String userName = SecurityUtils.getUsername();
+        SysUser user = userService.selectUserByUserName(userName);  //初始表用户信息
+        Long userID = user.getUserId();  //userID
+        UserInfo userInfo = iuserInfoService.selectUserInfoById(userID);  //新增表中的用户信息
+        userInfo.setOpenId(openId);
+        return AjaxResult.success(iuserInfoService.updateUserInfo(userInfo));
     }
 }
