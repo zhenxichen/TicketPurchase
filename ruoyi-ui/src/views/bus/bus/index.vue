@@ -116,7 +116,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -136,7 +136,7 @@
         </el-form-item>
         <el-form-item label="始发站" prop="start">
           <el-select v-model="form.start" placeholder="请选择始发站">
-            <el-option v-for="item in stationList" 
+            <el-option v-for="item in stationList"
               :key = "item.stationId"
               :label="item.stationName"
               :value="item.stationId"
@@ -145,7 +145,7 @@
         </el-form-item>
         <el-form-item label="终点站" prop="dest">
           <el-select v-model="form.dest" placeholder="请选择终点站">
-            <el-option v-for="item in stationList" 
+            <el-option v-for="item in stationList"
               :key = "item.stationId"
               :label="item.stationName"
               :value="item.stationId"
@@ -472,15 +472,15 @@ export default {
     },
     resetTicketForm() {
       this.ticketForm = {
-        busId: '',    
-        busDate: undefined,   
-        seat: undefined,      
-        employeeTickets: undefined,     
-        normalTickets: undefined,       
-        employeeTicketsRemain: undefined,   
-        normalTicketsRemain: undefined,     
-        employeePrice: undefined,           
-        normalPrice: undefined,             
+        busId: '',
+        busDate: undefined,
+        seat: undefined,
+        employeeTickets: undefined,
+        normalTickets: undefined,
+        employeeTicketsRemain: undefined,
+        normalTicketsRemain: undefined,
+        employeePrice: undefined,
+        normalPrice: undefined,
       }
     },
     submitTicketForm() {

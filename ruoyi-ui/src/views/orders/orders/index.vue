@@ -20,9 +20,20 @@
         />
       </el-form-item>
       <el-form-item label="订单状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择订单状态" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
+        <el-input
+          v-model="queryParams.status"
+          placeholder="0初始,1待核,2已核,3关闭"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+        <!--<el-select v-model="form.field101" placeholder="请选择订单状态" clearable :style="{width: '100%'}">
+          <el-option v-for="(item, index) in field101Options"
+                     :key="index"
+                     :label="item.label"
+                     :value="item.value"
+                     :disabled="item.disabled"></el-option>
+        </el-select>-->
       </el-form-item>
       <el-form-item label="车次" prop="bus">
         <el-input
@@ -124,7 +135,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -137,25 +148,31 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="订单号" prop="orderId">
-          <el-input v-model="form.orderId" placeholder="请输入订单号" />
+          <el-input v-model="form.orderId" placeholder="请输入订单号"
+                    :disabled="disableOrderId"/>
         </el-form-item>
         <el-form-item label="用户ID" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入用户ID" />
+          <el-input v-model="form.userId" placeholder="请输入用户ID"
+                    :disabled="disableUserId"/>
         </el-form-item>
-        <el-form-item label="订单状态">
-          <el-radio-group v-model="form.status">
-            <el-radio label="1">请选择字典生成</el-radio>
-          </el-radio-group>
+        <el-form-item label="订单状态" prop="status">
+          <el-input
+              v-model="form.status"
+              placeholder="0未知,1待核销,2已核销,3已关闭"
+              size="large"
+          />
         </el-form-item>
         <el-form-item label="车次" prop="bus">
-          <el-input v-model="form.bus" placeholder="请输入车次" />
+          <el-input v-model="form.bus" placeholder="请输入车次"
+                    :disabled="disableBus"/>
         </el-form-item>
         <el-form-item label="日期" prop="date">
           <el-date-picker clearable size="small"
             v-model="form.date"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择日期">
+            placeholder="选择日期"
+            :disabled="disableDate">
           </el-date-picker>
         </el-form-item>
       </el-form>
@@ -207,9 +224,16 @@ export default {
         date: null,
       },
       // 表单参数
-      form: {},
+      form: {
+        field101: '',
+      },
       // 表单校验
       rules: {
+        field101: [{
+          required: true,
+          message: '请选择订单状态',
+          trigger: 'change'
+        }],
         orderId: [
           { required: true, message: "订单号不能为空", trigger: "blur" }
         ],
@@ -225,7 +249,25 @@ export default {
         date: [
           { required: true, message: "日期不能为空", trigger: "blur" }
         ],
-      }
+      },
+      field101Options: [{
+        "label": "未知数",
+        "value": 0
+      }, {
+        "label": "待核销",
+        "value": 1
+      }, {
+        "label": "已核销",
+        "value": 2
+      }, {
+        "label": "已关闭",
+        "value": 3
+      }],
+      oper: '',   // 当前操作（add或update）
+      disableOrderId: false,    // 是否可以修改orderId
+      disableUserId:false,
+      disableBus:false,
+      disableDate:false,
     };
   },
   created() {
@@ -278,11 +320,21 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
+      this.oper = 'add';
+      this.disableOrderId=false;    // 是否可以修改orderId
+      this.disableUserId=false;
+      this.disableBus=false;
+      this.disableDate=false;
       this.title = "添加订单";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.oper = 'update';
+      this.disableDate=true;
+      this.disableBus=true;
+      this.disableUserId=true;
+      this.disableOrderId=true;
       const orderId = row.orderId || this.ids
       getOrders(orderId).then(response => {
         this.form = response.data;
@@ -294,7 +346,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.orderId != null) {
+          if (this.oper === 'update') {
             updateOrders(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
