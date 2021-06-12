@@ -64,7 +64,7 @@ public class TicketsControllerMini
             }
             //查询往返并拼接
             List<TicketDTO> ticketListGo=ticketsService.queryTickets(start,dest,date);
-            List<TicketDTO> ticketListBack=ticketsService.queryTickets(dest,start,date);
+            List<TicketDTO> ticketListBack=ticketsService.queryTickets(dest,start,date2);
             ticketList=ticketListGo;
             ticketList.addAll(ticketListBack);
         }else{
