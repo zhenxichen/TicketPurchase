@@ -6,6 +6,8 @@ import com.ruoyi.orders.mapper.OrdersMapper;
 import com.ruoyi.orders.util.OrderIdCreator;
 import com.ruoyi.orders.domain.Orders;
 import com.ruoyi.station.service.IStationExtendService;
+import com.ruoyi.system.domain.UserInfo;
+import com.ruoyi.system.service.IUserInfoService;
 import com.ruoyi.tickets.domain.DTO.TicketDTO;
 import com.ruoyi.tickets.domain.TicketOrder;
 import com.ruoyi.tickets.domain.Tickets;
@@ -38,6 +40,9 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
 
     @Autowired
     private IStationExtendService stationService;
+
+    @Autowired
+    private IUserInfoService iuserInfoService;
 
     @Override
     public List<TicketDTO> queryTickets(String start, String dest, String date) {
@@ -75,25 +80,43 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
         orders.setUserId(userId);
         orders.setStatus("1");
         orders.setCreateTime(new Date());
+
+        UserInfo userinfo=iuserInfoService.selectUserInfoById(userId);
+        Long balance=userinfo.getBalance();//获取用户余额
+
         //购票
         if (userRole==2){
             if(normalTicketsRemain>0){
+                if(balance<ticket.getNormalPrice()){
+                    return null;
+                }
+                userinfo.setBalance(userinfo.getBalance()-ticket.getNormalPrice());//用正常价更新余额
                 ordersMapper.insertOrders(orders);
                 ticket.setNormalTicketsRemain(ticket.getNormalTicketsRemain()-1);
+
             }else{
                 return null;
             }
         }else{
-            if(employeeTicketsRemain>0){
+            //先判断余额是否够员工票
+
+
+            if(balance<ticket.getEmployeePrice()){
+                return null;
+            }
+            userinfo.setBalance(userinfo.getBalance()-ticket.getEmployeePrice());//用员工价更新余额
+            if(employeeTicketsRemain>0){//优先买员工篇
                 ordersMapper.insertOrders(orders);
                 ticket.setEmployeeTicketsRemain(ticket.getEmployeeTicketsRemain()-1);
-            }else if(normalTicketsRemain>0){
+            }else if(normalTicketsRemain>0){//没有员工篇买普通票，但是价格还是员工价
                 ordersMapper.insertOrders(orders);
                 ticket.setNormalTicketsRemain(ticket.getNormalTicketsRemain()-1);
             }else{
                 return null;
             }
         }
+        //更新余额
+        iuserInfoService.updateUserInfo(userinfo);
         //更新票余量
         ticketsExtendMapper.updateTickets(ticket);
         //LoginUser loginUser = tokenService.getLoginUser(request);
