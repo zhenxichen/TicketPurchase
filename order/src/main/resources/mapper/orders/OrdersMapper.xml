@@ -12,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="date"    column="date"    />
         <result property="createTime"    column="create_time"    />
         <result property="verifyTime"    column="verify_time"    />
+        <result property="price" column="price" />
     </resultMap>
 
     <resultMap id="UserOrdersResult" type="UserOrdersDTO">
@@ -31,13 +32,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <sql id="selectNormalOrdersVo">
-        SELECT * FROM (
-            SELECT `order_id`,`user_id`,`bus`,`date`,`start_time`,`end_time`,`start_station` AS `start`,station_name AS `dest`,`normal_price` AS `price` ,`status`
-            FROM (SELECT `order_id`,`user_id`,`bus`,`date`,`start_time`,`end_time`,`start`,`station_name` AS start_station,`dest`,`normal_price`,`status`
-                  FROM (orders JOIN bus ON (bus.bus_id=orders.bus)) JOIN tickets ON (bus=tickets.`bus_id` AND `date`=tickets.`bus_date`)
-                        JOIN station ON (`start`=station_id)
-                  ) AS t1 JOIN station ON (`dest`=station_id)
-        )AS t2
+        SELECT
+            O.order_id, O.bus, O.`date`, B.start_time, B.end_time,
+            S.station_name as `start`, D.station_name as `dest`,
+            O.price as price, O.`status` as `status`
+        FROM orders O
+        JOIN bus B ON O.bus = B.bus_id
+        JOIN station S ON B.`start` = S.station_id
+        JOIN station D ON B.`dest` = D.station_id
     </sql>
 
     <select id="selectNormalOrdersList" parameterType="OrdersInfo" resultMap="UserOrdersResult">
@@ -52,13 +54,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <sql id="selectEmployeeOrdersVo">
-        SELECT * FROM (
-            SELECT `order_id`,`user_id`,`bus`,`date`,`start_time`,`end_time`,`start_station` AS `start`,station_name AS `dest`,`employee_price` AS `price`,`status`
-            FROM (SELECT `order_id`,`user_id`,`bus`,`date`,`start_time`,`end_time`,`start`,`station_name` AS start_station,`dest`,`employee_price`,`status`
-                  FROM (orders JOIN bus ON (bus.bus_id=orders.bus)) JOIN tickets ON (bus=tickets.`bus_id` AND `date`=tickets.`bus_date`)
-                        JOIN station ON (`start`=station_id)
-                  ) AS t1 JOIN station ON (`dest`=station_id)
-        )AS t2
+        SELECT
+            O.order_id, O.bus, O.`date`, B.start_time, B.end_time,
+            S.station_name as `start`, D.station_name as `dest`,
+            O.price as price, O.`status` as `status`
+        FROM orders O
+        JOIN bus B ON O.bus = B.bus_id
+        JOIN station S ON B.`start` = S.station_id
+        JOIN station D ON B.`dest` = D.station_id
     </sql>
 
     <select id="selectEmployeeOrdersList" parameterType="OrdersInfo" resultMap="UserOrdersResult">
