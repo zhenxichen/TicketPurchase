@@ -41,6 +41,18 @@ public class StationController extends BaseController
     }
 
     /**
+     * 查询车站列表
+     */
+    @PreAuthorize("@ss.hasPermi('station:station:list')")
+    @GetMapping("/list/table")
+    public TableDataInfo listTable(Station station)
+    {
+        startPage();
+        List<Station> list = stationService.selectStationList(station);
+        return getDataTable(list);
+    }
+
+    /**
      * 获取车站详细信息
      */
     @PreAuthorize("@ss.hasPermi('station:station:query')")
