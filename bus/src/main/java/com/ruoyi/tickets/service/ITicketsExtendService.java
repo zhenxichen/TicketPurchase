@@ -19,7 +19,7 @@ public interface ITicketsExtendService {
     public List<TicketDTO> queryTickets(String start, String dest, String date);
 
     /**
-     * 购票，返回订单id
+     * 购票，返回订单id。订单状态未支付
      * 员工优先买员工票，没有员工票可以买普通票
      * 普通用户只能买普通用户
      * 购票成功返回订单id
@@ -29,4 +29,13 @@ public interface ITicketsExtendService {
      * @return
      */
     public String purchaseTicket(TicketOrder ticketOrder,Long userId,Long userRole);
+
+    /**
+     * 付款
+     * @param orderId
+     * @param userId
+     * @param userRole
+     * @return
+     */
+    public boolean payOrder(String orderId,Long userId,Long userRole);
 }

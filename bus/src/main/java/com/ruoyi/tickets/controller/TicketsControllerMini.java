@@ -95,5 +95,23 @@ public class TicketsControllerMini
         }
         return result;
     }
+
+    /**
+     * 返回符合对应查询条件的车票
+     * @return
+     */
+    @GetMapping("/payOrder")
+    public AjaxResult payOrder(HttpServletRequest request,@RequestParam("orderId") String orderId) {
+        SysUser user = tokenService.getLoginUser(request).getUser();
+        Long userId=user.getUserId();
+        Long userRole=user.getRoles().get(0).getRoleId();
+        boolean isPaySuccess=ticketsService.payOrder(orderId,userId,userRole);
+        if (isPaySuccess){
+            return AjaxResult.success();
+        }else{
+            return AjaxResult.error("付款失败");
+        }
+    }
+
 }
 
