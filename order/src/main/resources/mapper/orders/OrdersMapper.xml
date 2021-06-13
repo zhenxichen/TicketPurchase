@@ -102,6 +102,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="date != null">date,</if>
             <if test="createTime != null">create_time,</if>
             <if test="verifyTime != null">verify_time,</if>
+            <if test="price != null">price,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null">#{orderId},</if>
@@ -111,6 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="date != null">#{date},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="verifyTime != null">#{verifyTime},</if>
+            <if test="price != null">#{price},</if>
          </trim>
     </insert>
 
@@ -123,6 +125,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="date != null">date = #{date},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="verifyTime != null">verify_time = #{verifyTime},</if>
+            <if test="price != null">price = #{price},</if>
         </trim>
         where order_id = #{orderId}
     </update>
