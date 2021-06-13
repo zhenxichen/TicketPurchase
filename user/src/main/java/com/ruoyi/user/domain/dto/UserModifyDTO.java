@@ -8,7 +8,7 @@ public class UserModifyDTO {
 
     private String nickName;  //用户昵称
 
-    private  String IDcard ; //用户身份证
+    private  String idCard ; //用户身份证
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -30,10 +30,11 @@ public class UserModifyDTO {
 
     public void setNickName(String nickName) { this.nickName = nickName; }
 
-    public String getIDcard() {
-        return IDcard;
+    public String getIdCard() {
+        return idCard;
     }
 
-    public void setIDcard(String IDcard) { this.IDcard = IDcard; }
-
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
 }
