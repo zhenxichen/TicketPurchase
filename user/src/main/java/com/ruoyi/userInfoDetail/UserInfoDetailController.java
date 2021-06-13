@@ -119,7 +119,7 @@ public class UserInfoDetailController extends BaseController
             oldUserInfo.setIdCard(userModifyDTO.getIdCard());
             iuserInfoService.updateUserInfo(oldUserInfo);
         }
-        return AjaxResult.success();
+        return AjaxResult.success(userModifyDTO);
     }
 
 
