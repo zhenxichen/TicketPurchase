@@ -91,6 +91,7 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
                     return null;
                 }
                 userinfo.setBalance(userinfo.getBalance()-ticket.getNormalPrice());//用正常价更新余额
+                orders.setPrice(ticket.getNormalPrice());
                 ordersMapper.insertOrders(orders);
                 ticket.setNormalTicketsRemain(ticket.getNormalTicketsRemain()-1);
 
@@ -105,6 +106,7 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
                 return null;
             }
             userinfo.setBalance(userinfo.getBalance()-ticket.getEmployeePrice());//用员工价更新余额
+            orders.setPrice(ticket.getEmployeePrice());
             if(employeeTicketsRemain>0){//优先买员工篇
                 ordersMapper.insertOrders(orders);
                 ticket.setEmployeeTicketsRemain(ticket.getEmployeeTicketsRemain()-1);
