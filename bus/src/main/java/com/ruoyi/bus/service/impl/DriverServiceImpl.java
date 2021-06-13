@@ -65,7 +65,7 @@ public class DriverServiceImpl implements IDriverService {
         ret.setVerifyNum(verified);
         int total = getCurrCount(busId);
         ret.setTotalNum(total);
-        ret.setUnVerifyNum(total);
+        ret.setUnVerifyNum(total - verified);
         return ret;
     }
 

@@ -1,10 +1,14 @@
 package com.ruoyi.userInfoDetail;
 
+import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 
+import com.ruoyi.common.exception.user.PhoneNumberNotUniqueException;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.UserInfo;
 import com.ruoyi.system.service.ISysPostService;
 import com.ruoyi.system.service.ISysRoleService;
@@ -90,10 +94,22 @@ public class UserInfoDetailController extends BaseController
         String oldUserName = SecurityUtils.getUsername();
         SysUser oldUser = userService.selectUserByUserName(oldUserName);
         Long userId = oldUser.getUserId();
-        oldUser.setPhonenumber(userModifyDTO.getPhoneNumber());
-        oldUser.setNickName(userModifyDTO.getNickName());
-        String newpwd = SecurityUtils.encryptPassword(userModifyDTO.getPwd());
-        oldUser.setPassword(newpwd);
+        String phone = userModifyDTO.getPhoneNumber();
+        if (StringUtils.isNotEmpty(phone)) {
+            oldUser.setPhonenumber(phone);
+            if (userService.checkPhoneUnique(oldUser) == UserConstants.NOT_UNIQUE) {
+                throw new PhoneNumberNotUniqueException();
+            }
+        }
+        String nickname = userModifyDTO.getNickName();
+        if (StringUtils.isNotEmpty(nickname)) {
+            oldUser.setNickName(nickname);
+        }
+        String password = userModifyDTO.getPwd();
+        if (StringUtils.isNotNull(password) && StringUtils.isNotEmpty(password)) {
+            String newpwd = SecurityUtils.encryptPassword(userModifyDTO.getPwd());
+            oldUser.setPassword(newpwd);
+        }
         userService.updateUser(oldUser);
         UserInfo oldUserInfo = iuserInfoService.selectUserInfoById(userId);
 //        oldUserInfo.setName(usename);

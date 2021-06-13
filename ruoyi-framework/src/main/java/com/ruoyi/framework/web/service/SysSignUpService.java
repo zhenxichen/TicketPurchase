@@ -2,6 +2,7 @@ package com.ruoyi.framework.web.service;
 
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.exception.user.PhoneNumberNotUniqueException;
 import com.ruoyi.common.exception.user.SignUpException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.domain.SysUserRole;
@@ -45,6 +46,9 @@ public class SysSignUpService {
             throw new SignUpException(SignUpException.REQUEST_FORMAT_ERROR);
         }
         user.setPhonenumber(phoneNumber);
+        if (userService.checkPhoneUnique(user) == UserConstants.NOT_UNIQUE) {       // 若手机号已存在
+            throw new PhoneNumberNotUniqueException();
+        }
         user.setUserName(username);
         user.setPassword(SecurityUtils.encryptPassword(password));
         user.setNickName(username);     // 由于RuoYi自带的用户表结构必须填写nickname，因此使用username代替
@@ -56,7 +60,7 @@ public class SysSignUpService {
         infoService.insertUserInfo(info);
         SysUserRole userRole = new SysUserRole();
         userRole.setUserId(user.getUserId());
-        userRole.setRoleId(100L);
+        userRole.setRoleId(2L);
         List<SysUserRole> list = new ArrayList<>();
         list.add(userRole);
         userRoleMapper.batchUserRole(list);
