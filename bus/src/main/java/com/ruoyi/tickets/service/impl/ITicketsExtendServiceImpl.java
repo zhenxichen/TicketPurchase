@@ -78,19 +78,12 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
         orders.setDate(ticketOrder.getStartDate());
         orders.setOrderId(orderId);
         orders.setUserId(userId);
-        orders.setStatus("1");
+        orders.setStatus("0");
         orders.setCreateTime(new Date());
-
-        UserInfo userinfo=iuserInfoService.selectUserInfoById(userId);
-        Long balance=userinfo.getBalance();//获取用户余额
 
         //购票
         if (userRole==2){
             if(normalTicketsRemain>0){
-                if(balance<ticket.getNormalPrice()){
-                    return null;
-                }
-                userinfo.setBalance(userinfo.getBalance()-ticket.getNormalPrice());//用正常价更新余额
                 orders.setPrice(ticket.getNormalPrice());
                 ordersMapper.insertOrders(orders);
                 ticket.setNormalTicketsRemain(ticket.getNormalTicketsRemain()-1);
@@ -99,13 +92,6 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
                 return null;
             }
         }else{
-            //先判断余额是否够员工票
-
-
-            if(balance<ticket.getEmployeePrice()){
-                return null;
-            }
-            userinfo.setBalance(userinfo.getBalance()-ticket.getEmployeePrice());//用员工价更新余额
             orders.setPrice(ticket.getEmployeePrice());
             if(employeeTicketsRemain>0){//优先买员工篇
                 ordersMapper.insertOrders(orders);
@@ -117,12 +103,24 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
                 return null;
             }
         }
-        //更新余额
-        iuserInfoService.updateUserInfo(userinfo);
         //更新票余量
         ticketsExtendMapper.updateTickets(ticket);
-        //LoginUser loginUser = tokenService.getLoginUser(request);
-        //TicketOrder ticketOrder=request.get
         return orderId;
+    }
+
+    @Override
+    public boolean payOrder(String orderId, Long userId, Long userRole) {
+        UserInfo userinfo=iuserInfoService.selectUserInfoById(userId);
+        Orders order=ordersMapper.selectOrdersById(orderId);
+        System.out.println(order.getStatus());
+        if(userinfo.getBalance()<order.getPrice()||order.getStatus().equals("1")){
+            return false;
+        }
+        userinfo.setBalance(userinfo.getBalance()-order.getPrice());
+        order.setStatus("1");
+        if(ordersMapper.updateOrders(order)==0||iuserInfoService.updateUserInfo(userinfo)==0){
+            return false;
+        }
+        return true;
     }
 }

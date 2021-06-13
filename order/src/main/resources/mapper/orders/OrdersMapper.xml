@@ -27,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectOrdersVo">
-        select order_id, user_id, status, bus, date, create_time, verify_time from orders
+        select order_id, user_id, status, bus, date, create_time, verify_time,price from orders
     </sql>
 
     <sql id="selectNormalOrdersVo">
