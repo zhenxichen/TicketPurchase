@@ -10,9 +10,11 @@ import com.ruoyi.tickets.domain.Tickets;
 import com.ruoyi.tickets.service.ITicketsManageService;
 import com.ruoyi.tickets.service.ITicketsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -101,4 +103,12 @@ public class TicketsController extends BaseController {
         return AjaxResult.success(ticketsManageService.selectDriverList());
     }
 
+    /**
+     * 获取车次票量情况
+     */
+    @GetMapping("/ticket/info")
+    public AjaxResult ticketInfo(@RequestParam("busId") String busId,
+                                 @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+        return AjaxResult.success(ticketsManageService.selectTicketsByIdAndDate(busId, date));
+    }
 }
