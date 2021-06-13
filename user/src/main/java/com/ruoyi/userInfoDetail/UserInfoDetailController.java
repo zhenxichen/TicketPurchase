@@ -10,6 +10,7 @@ import com.ruoyi.system.service.ISysPostService;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.service.IUserInfoService;
+import com.ruoyi.user.domain.dto.UserModifyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.token.TokenService;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,7 @@ public class UserInfoDetailController extends BaseController
         SysUser user = userService.selectUserByUserName(oldUserName);  //初始表用户信息
         Long userID = user.getUserId();  //userID
         String username = user.getUserName(); //username
+        String nickName = user.getNickName(); //nickName
         String phoneNumber = user.getPhonenumber();  //phoneNumber
         Set<String> userType = roleService.selectRolePermissionByUserId(userID);
 //        String type = userType.iterator().next();   //userType
@@ -69,6 +71,7 @@ public class UserInfoDetailController extends BaseController
         Map<String, Object> dataMap = new HashMap<String, Object>();
         dataMap.put("userID", userID);
         dataMap.put("username", username);
+        dataMap.put("nickName", nickName);
         dataMap.put("phoneNumber", phoneNumber);
         dataMap.put("userType", userTypeChinese);
         dataMap.put("IDCard", IDCard);
@@ -82,22 +85,39 @@ public class UserInfoDetailController extends BaseController
      * 修改用户详细信息
      */
     @PostMapping("/userInfo")
-    public AjaxResult userInfoModify(@RequestParam("phoneNumber")String phoneNumber,@RequestParam("usename")String usename,@RequestParam("pwd")String pwd,@RequestParam("IDcard")String id_card)
+    public AjaxResult userInfoModify(@RequestBody UserModifyDTO userModifyDTO)
     {
         String oldUserName = SecurityUtils.getUsername();
         SysUser oldUser = userService.selectUserByUserName(oldUserName);
         Long userId = oldUser.getUserId();
-        oldUser.setPhonenumber(phoneNumber);
-        oldUser.setUserName(usename);
-        String newpwd = SecurityUtils.encryptPassword(pwd);
+        oldUser.setPhonenumber(userModifyDTO.getPhoneNumber());
+        oldUser.setNickName(userModifyDTO.getNickName());
+        String newpwd = SecurityUtils.encryptPassword(userModifyDTO.getPwd());
         oldUser.setPassword(newpwd);
         userService.updateUser(oldUser);
         UserInfo oldUserInfo = iuserInfoService.selectUserInfoById(userId);
-        oldUserInfo.setName(usename);
-        oldUserInfo.setIdCard(id_card);
+//        oldUserInfo.setName(usename);
+        oldUserInfo.setIdCard(userModifyDTO.getIDcard());
         iuserInfoService.updateUserInfo(oldUserInfo);
         return  AjaxResult.success( iuserInfoService.updateUserInfo(oldUserInfo));
     }
+//    @PostMapping("/userInfo")
+//    public AjaxResult userInfoModify(@RequestParam("phoneNumber")String phoneNumber,@RequestParam("usename")String usename,@RequestParam("pwd")String pwd,@RequestParam("IDcard")String id_card)
+//    {
+//        String oldUserName = SecurityUtils.getUsername();
+//        SysUser oldUser = userService.selectUserByUserName(oldUserName);
+//        Long userId = oldUser.getUserId();
+//        oldUser.setPhonenumber(phoneNumber);
+//        oldUser.setUserName(usename);
+//        String newpwd = SecurityUtils.encryptPassword(pwd);
+//        oldUser.setPassword(newpwd);
+//        userService.updateUser(oldUser);
+//        UserInfo oldUserInfo = iuserInfoService.selectUserInfoById(userId);
+//        oldUserInfo.setName(usename);
+//        oldUserInfo.setIdCard(id_card);
+//        iuserInfoService.updateUserInfo(oldUserInfo);
+//        return  AjaxResult.success( iuserInfoService.updateUserInfo(oldUserInfo));
+//    }
 //    @GetMapping("/userInfo")  //通过ID号修改
 //    public AjaxResult userInfoModify(@RequestParam("ID")Long ID,@RequestParam("phoneNumber")String phoneNumber,@RequestParam("usename")String usename,@RequestParam("pwd")String pwd,@RequestParam("IDcard")String id_card)
 //    {
@@ -151,6 +171,17 @@ public class UserInfoDetailController extends BaseController
         ajax.put("data", dataMap);
         return ajax;
     }
+
+    @GetMapping("getOpenid")
+    public AjaxResult getOpenid(@RequestParam("openId")String openId){
+        String userName = SecurityUtils.getUsername();
+        SysUser user = userService.selectUserByUserName(userName);  //初始表用户信息
+        Long userID = user.getUserId();  //userID
+        UserInfo userInfo = iuserInfoService.selectUserInfoById(userID);  //新增表中的用户信息
+        userInfo.setOpenId(openId);
+        return AjaxResult.success(iuserInfoService.updateUserInfo(userInfo));
+    }
+
 
 }
 
