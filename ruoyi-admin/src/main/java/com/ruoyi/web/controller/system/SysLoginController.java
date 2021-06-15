@@ -6,6 +6,7 @@ import java.util.Set;
 import com.ruoyi.common.core.domain.model.*;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.domain.UserInfo;
+import com.ruoyi.system.domain.UserOpenIdDTO;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.service.IUserInfoService;
 import org.apache.commons.collections4.Get;
@@ -134,6 +135,12 @@ public class SysLoginController
 
     @GetMapping("getOpenid")
     public AjaxResult getOpenid(@RequestParam("openId")String openId){
+//        UserOpenIdDTO user  = iuserInfoService.selectUsernameByOpenId(openId);
+        if(iuserInfoService.selectUsernameByOpenId(openId)!=null){
+            AjaxResult ajax = AjaxResult.error();
+            ajax.put("result","操作失败，该openid已绑定其他用户" );
+            return ajax;
+        }
         String userName = SecurityUtils.getUsername();
         SysUser user = userService.selectUserByUserName(userName);  //初始表用户信息
         Long userID = user.getUserId();  //userID
