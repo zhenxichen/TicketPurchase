@@ -51,6 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="start != null "> and start = #{start}</if>
             <if test="dest != null "> and dest = #{dest}</if>
         </where>
+        ORDER BY `date` DESC, `start_time` DESC
     </select>
 
     <sql id="selectEmployeeOrdersVo">
@@ -73,6 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="start != null "> and start = #{start}</if>
             <if test="dest != null "> and dest = #{dest}</if>
         </where>
+        ORDER BY `date` DESC, `start_time` DESC
     </select>
 
     <select id="selectOrdersList" parameterType="Orders" resultMap="OrdersResult">
