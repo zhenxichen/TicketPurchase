@@ -11,6 +11,7 @@ import com.ruoyi.common.exception.user.PhoneNumberNotUniqueException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.UserInfo;
+import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.service.ISysPostService;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
@@ -40,6 +41,9 @@ public class UserInfoDetailController extends BaseController
 
     @Autowired
     private ISysPostService postService;
+
+    @Autowired
+    private SysUserMapper userMapper;
 
     @RequestMapping("/index")
     public Object add() throws Exception {
@@ -112,7 +116,7 @@ public class UserInfoDetailController extends BaseController
             String newpwd = SecurityUtils.encryptPassword(userModifyDTO.getPwd());
             oldUser.setPassword(newpwd);
         }
-        userService.updateUser(oldUser);
+        userMapper.updateUser(oldUser);     // userService中的updateUser()方法会删除用户原有的角色信息
         UserInfo oldUserInfo = iuserInfoService.selectUserInfoById(userId);
         String idCard = userModifyDTO.getIdCard();
         if (StringUtils.isNotEmpty(idCard)) {
