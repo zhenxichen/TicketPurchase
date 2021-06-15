@@ -5,6 +5,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.exception.BaseException;
 import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.exception.DemoModeException;
+import com.ruoyi.common.exception.QRCodeException;
 import com.ruoyi.common.exception.user.PhoneNumberNotExistException;
 import com.ruoyi.common.exception.user.PhoneNumberNotUniqueException;
 import com.ruoyi.common.exception.user.SignUpException;
@@ -146,5 +147,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PhoneNumberNotUniqueException.class)
     public AjaxResult phoneNumberNotUniqueException() {
         return AjaxResult.error("该手机号已绑定账号");
+    }
+
+    /**
+     * 二维码生成错误
+     */
+    @ExceptionHandler(QRCodeException.class)
+    public AjaxResult qrCodeException() {
+        return AjaxResult.error("二维码生成错误");
     }
 }
