@@ -138,4 +138,14 @@ public class OrdersServiceImpl implements IOrdersService
         List<UserOrdersDTO> resList = ordersMapper.selectEmployeeOrdersList(userOrder);
         return resList;
     }
+
+    /**
+     * 关闭发车日期早于今日的所有未核销订单
+     *
+     * @return 修改的数据库条数
+     */
+    @Override
+    public int closeOrdersBeforeToday() {
+        return ordersMapper.closeOrdersBeforeToday();
+    }
 }

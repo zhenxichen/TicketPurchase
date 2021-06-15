@@ -143,4 +143,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{orderId}
         </foreach>
     </delete>
+
+    <update id="closeOrdersBeforeToday">
+        UPDATE orders
+        SET `status` = '3'
+        WHERE `date` &lt; CURDATE() AND `status` = '1'
+    </update>
 </mapper>
