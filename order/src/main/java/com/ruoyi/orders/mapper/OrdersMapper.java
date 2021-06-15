@@ -88,4 +88,9 @@ public interface OrdersMapper
      * @date 2021/6/8
     */
     public List<UserOrdersDTO> selectEmployeeOrdersList(OrdersInfo userOrder);
+
+    /**
+     * 将发车日期早于今日的所有未核销（状态为1）订单状态修改为3
+     */
+    int closeOrdersBeforeToday();
 }

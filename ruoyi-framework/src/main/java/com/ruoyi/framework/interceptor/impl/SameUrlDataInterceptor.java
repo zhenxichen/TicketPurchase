@@ -40,7 +40,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor
      * 
      * 两次相同参数的请求，如果间隔时间大于该参数，系统不会认定为重复提交的数据
      */
-    private int intervalTime = 10;
+    private int intervalTime = 5;       // 将间隔时间改为5s
 
     public void setIntervalTime(int intervalTime)
     {

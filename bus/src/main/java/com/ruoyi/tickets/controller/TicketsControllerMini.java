@@ -3,6 +3,7 @@ package com.ruoyi.tickets.controller;
 import java.util.List;
 
 import com.ruoyi.bus.domain.OrderId;
+import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
@@ -78,11 +79,12 @@ public class TicketsControllerMini
     }
 
     /**
-     * 返回符合对应查询条件的车票
+     * 下单接口
      * @return
      */
+    @RepeatSubmit
     @PostMapping("/purchase")
-    public AjaxResult ticketList(HttpServletRequest request,@RequestBody TicketOrder ticketOrder) {
+    public AjaxResult purchase(HttpServletRequest request, @RequestBody TicketOrder ticketOrder) {
         SysUser user = tokenService.getLoginUser(request).getUser();
         Long userId=user.getUserId();
         Long userRole=user.getRoles().get(0).getRoleId();
@@ -99,9 +101,10 @@ public class TicketsControllerMini
     }
 
     /**
-     * 返回符合对应查询条件的车票
+     * 支付接口
      * @return
      */
+    @RepeatSubmit
     @GetMapping("/payOrder")
     public AjaxResult payOrder(HttpServletRequest request,@RequestParam("orderId") String orderId) {
         SysUser user = tokenService.getLoginUser(request).getUser();

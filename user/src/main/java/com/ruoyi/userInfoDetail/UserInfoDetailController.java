@@ -1,5 +1,6 @@
 package com.ruoyi.userInfoDetail;
 
+import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
@@ -10,6 +11,7 @@ import com.ruoyi.common.exception.user.PhoneNumberNotUniqueException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.UserInfo;
+import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.service.ISysPostService;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
@@ -39,6 +41,9 @@ public class UserInfoDetailController extends BaseController
 
     @Autowired
     private ISysPostService postService;
+
+    @Autowired
+    private SysUserMapper userMapper;
 
     @RequestMapping("/index")
     public Object add() throws Exception {
@@ -88,6 +93,7 @@ public class UserInfoDetailController extends BaseController
     /**
      * 修改用户详细信息
      */
+    @RepeatSubmit
     @PostMapping("/userInfo")
     public AjaxResult userInfoModify(@RequestBody UserModifyDTO userModifyDTO)
     {
@@ -110,45 +116,16 @@ public class UserInfoDetailController extends BaseController
             String newpwd = SecurityUtils.encryptPassword(userModifyDTO.getPwd());
             oldUser.setPassword(newpwd);
         }
-        userService.updateUser(oldUser);
+        userMapper.updateUser(oldUser);     // userService中的updateUser()方法会删除用户原有的角色信息
         UserInfo oldUserInfo = iuserInfoService.selectUserInfoById(userId);
-//        oldUserInfo.setName(usename);
-        oldUserInfo.setIdCard(userModifyDTO.getIDcard());
-        iuserInfoService.updateUserInfo(oldUserInfo);
-        return  AjaxResult.success( iuserInfoService.updateUserInfo(oldUserInfo));
+        String idCard = userModifyDTO.getIdCard();
+        if (StringUtils.isNotEmpty(idCard)) {
+            oldUserInfo.setIdCard(userModifyDTO.getIdCard());
+            iuserInfoService.updateUserInfo(oldUserInfo);
+        }
+        return AjaxResult.success(userModifyDTO);
     }
-//    @PostMapping("/userInfo")
-//    public AjaxResult userInfoModify(@RequestParam("phoneNumber")String phoneNumber,@RequestParam("usename")String usename,@RequestParam("pwd")String pwd,@RequestParam("IDcard")String id_card)
-//    {
-//        String oldUserName = SecurityUtils.getUsername();
-//        SysUser oldUser = userService.selectUserByUserName(oldUserName);
-//        Long userId = oldUser.getUserId();
-//        oldUser.setPhonenumber(phoneNumber);
-//        oldUser.setUserName(usename);
-//        String newpwd = SecurityUtils.encryptPassword(pwd);
-//        oldUser.setPassword(newpwd);
-//        userService.updateUser(oldUser);
-//        UserInfo oldUserInfo = iuserInfoService.selectUserInfoById(userId);
-//        oldUserInfo.setName(usename);
-//        oldUserInfo.setIdCard(id_card);
-//        iuserInfoService.updateUserInfo(oldUserInfo);
-//        return  AjaxResult.success( iuserInfoService.updateUserInfo(oldUserInfo));
-//    }
-//    @GetMapping("/userInfo")  //通过ID号修改
-//    public AjaxResult userInfoModify(@RequestParam("ID")Long ID,@RequestParam("phoneNumber")String phoneNumber,@RequestParam("usename")String usename,@RequestParam("pwd")String pwd,@RequestParam("IDcard")String id_card)
-//    {
-//        String userName = SecurityUtils.getUsername();
-//        SysUser oldUser = userService.selectUser
-//        oldUser.setPhonenumber(phoneNumber);
-//        oldUser.setUserName(usename);
-//        oldUser.setPassword(pwd);
-//        userService.updateUser(oldUser);
-//        UserInfo oldUserInfo = iuserInfoService.selectUserInfoById(ID);
-//        oldUserInfo.setName(usename);
-//        oldUserInfo.setIdCard(id_card);
-//        iuserInfoService.updateUserInfo(oldUserInfo);
-//         return  AjaxResult.success( iuserInfoService.updateUserInfo(oldUserInfo));
-//    }
+
 
     /**
      * 获取用户余额
@@ -171,6 +148,7 @@ public class UserInfoDetailController extends BaseController
     /**
      * 充值用户余额
      */
+    @RepeatSubmit
     @PostMapping("/userInfo/wallet")
     public AjaxResult addUserBalance(@RequestParam("balance")Long addBalance)
     {

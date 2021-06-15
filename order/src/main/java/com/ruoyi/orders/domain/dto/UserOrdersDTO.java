@@ -1,5 +1,7 @@
 package com.ruoyi.orders.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**
@@ -10,8 +12,12 @@ import java.util.Date;
  */
 public class UserOrdersDTO {
     private String orderID;         //订单编号
+
     private String busID;           //车次编号
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;              //发车日期
+    
     private String startTime;       //发车时间
     private String destTime;        //到站时间
     private String start;           //发车站

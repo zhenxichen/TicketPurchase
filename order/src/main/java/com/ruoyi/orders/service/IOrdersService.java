@@ -89,4 +89,10 @@ public interface IOrdersService
      * @date 2021/6/8
      */
     List<UserOrdersDTO> selectEmployeeOrdersList(OrdersInfo userOrder);
+
+    /**
+     * 关闭发车日期早于今日的所有未核销订单
+     * @return 修改的数据库条数
+     */
+    int closeOrdersBeforeToday();
 }
