@@ -1,5 +1,7 @@
 package com.ruoyi.tickets.service.impl;
 
+import com.ruoyi.bus.domain.Bus;
+import com.ruoyi.bus.service.IBusService;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.orders.mapper.OrdersMapper;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +46,9 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
 
     @Autowired
     private IUserInfoService iuserInfoService;
+
+    @Autowired
+    private IBusService iBusService;
 
     @Override
     public List<TicketDTO> queryTickets(String start, String dest, String date) {

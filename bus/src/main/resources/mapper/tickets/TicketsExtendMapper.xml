@@ -40,7 +40,7 @@
         bus_date,start_time,end_time,employee_price,normal_price,employee_tickets_remain,normal_tickets_remain
         from tickets,bus
         where tickets.bus_id=bus.bus_id and bus.start=#{startStationId} and bus.dest=#{destStationId}
-            and tickets.bus_date=date(#{date});
+            and tickets.bus_date=date(#{date}) and bus.start_time>curtime();;
     </select>
 
     <select id="selectTicketsByIdAndDate"  resultMap="TicketsResult">
