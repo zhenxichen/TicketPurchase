@@ -100,6 +100,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/login", "/captchaImage").anonymous()
                 // 释放登录和注册接口
                 .antMatchers("/login/*", "/signup/*").anonymous()
+                // 释放WebSocket接口
+                .antMatchers("/websocket/*").anonymous()
                 .antMatchers(
                         HttpMethod.GET,
                         "/*.html",
