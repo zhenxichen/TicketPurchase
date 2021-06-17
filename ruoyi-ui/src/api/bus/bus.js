@@ -69,9 +69,19 @@ export function setTicket(data) {
   })
 }
 
+// 获取司机列表
 export function driverList() {
   return request({
     url: '/tickets/tickets/driver',
     method: 'get',
+  })
+}
+
+// 获取当日车票量情况
+export function getTicket(query) {
+  return request({
+    url: '/tickets/tickets/ticket/info',
+    method: 'get',
+    params: query
   })
 }
