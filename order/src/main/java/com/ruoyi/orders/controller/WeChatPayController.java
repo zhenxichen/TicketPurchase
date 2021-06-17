@@ -8,10 +8,13 @@ import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.util.SignUtils;
 import com.ruoyi.orders.domain.ReturnPayInfoVO;
+import com.ruoyi.orders.domain.WechatOrder;
+import com.ruoyi.orders.service.IOrdersExtendService;
 import com.ruoyi.orders.util.WeChatPayProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.util.HashMap;
@@ -23,38 +26,40 @@ import java.util.Map;
  * @description:
  */
 @RestController
-@RequestMapping(value = "/api/client/pay/")
+@RequestMapping("/ticket")
 public class WeChatPayController {
 
     @Autowired
     private WxPayService wxPayService;
     @Autowired
     WeChatPayProperties weChatPayProperties;
-
+    @Autowired
+    private IOrdersExtendService ordersExtendService;
     /**
      * 此处处理订单信息，构建订单数据。
      *
      * 将构建好的支付参数返回到前端，前端调起微信支付
      * @return
      */
-    @GetMapping(value = "weChatPay")
-    public ReturnPayInfoVO weChatPay() {
+    @PostMapping(value = "payOrderWechat")
+    public ReturnPayInfoVO weChatPay(HttpServletRequest request, @RequestBody WechatOrder wecharOrder) {
+
         /**
          * 处理内部业务，校验订单等
          */
         final WxPayUnifiedOrderRequest wxPayUnifiedOrderRequest = WxPayUnifiedOrderRequest.newBuilder()
                 //调起支付的人的 openId
-                .openid("openId")
+                .openid(wecharOrder.getOpenid())
                 //订单编号
-                .outTradeNo("我们系统内部订单号")
+                .outTradeNo(wecharOrder.getOrderId())
                 //订单金额
-                .totalFee(yuanToFee(new BigDecimal(100)))
+                .totalFee(yuanToFee(wecharOrder.getFee()))
                 //商品描述
-                .body("订单信息")
+                .body(wecharOrder.getOrderInformation())
                 //获取本地IP
                 .spbillCreateIp(InetAddress.getLoopbackAddress().getHostAddress())
                 //回调的 URL 地址
-                .notifyUrl("http://localhost:8080/api/client/pay/weChatPayNotify")
+                .notifyUrl("http://49.232.26.148:8080/ticket/weChatPayNotify")
                 .build();
         WxPayUnifiedOrderResult wxPayUnifiedOrderResult =null;
         try {
@@ -97,7 +102,8 @@ public class WeChatPayController {
         try {
             final WxPayOrderNotifyResult notifyResult = this.wxPayService.parseOrderNotifyResult(xmlData);
             //这里是存储我们发起支付时订单号的信息，所以取出来
-            notifyResult.getOutTradeNo();
+            String orderId=notifyResult.getOutTradeNo();
+            ordersExtendService.setOrderStatus(orderId,"1");
             /**
              * 系统内部业务，修改订单状态之类的
              */
