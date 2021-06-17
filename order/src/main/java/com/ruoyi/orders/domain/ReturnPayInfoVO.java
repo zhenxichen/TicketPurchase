@@ -10,21 +10,12 @@ public class ReturnPayInfoVO {
     /**
      * appid
      */
-    private String appId;
 
     private String timeStamp;
     private String nonceStr;
     private String prepayId;
     private String paySign;
     private String signType;
-
-    public String getAppId() {
-        return appId;
-    }
-
-    public void setAppId(String appId) {
-        this.appId = appId;
-    }
 
     public String getTimeStamp() {
         return timeStamp;

@@ -53,7 +53,7 @@ public class WeChatPayController {
                 //订单编号
                 .outTradeNo(wecharOrder.getOrderId())
                 //订单金额
-                .totalFee(yuanToFee(wecharOrder.getFee()))
+                .totalFee(yuanToFee(wecharOrder.getPrice()))
                 //商品描述
                 .body(wecharOrder.getOrderInformation())
                 //获取本地IP
@@ -81,7 +81,6 @@ public class WeChatPayController {
 
         //组合支付参数
         ReturnPayInfoVO returnPayInfoVO = new ReturnPayInfoVO();
-        returnPayInfoVO.setAppId(weChatPayProperties.getAppId());
         returnPayInfoVO.setNonceStr(nonceStr);
         returnPayInfoVO.setPaySign(paySign);
         returnPayInfoVO.setSignType("MD5");

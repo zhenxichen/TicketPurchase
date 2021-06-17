@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 
 public class WechatOrder {
     private String orderId;
-    private BigDecimal fee;
+    private BigDecimal price;
     private String orderInformation;
     private String openid;
 
-    public WechatOrder(String orderId, BigDecimal fee, String orderInformation, String openid) {
+    public WechatOrder(String orderId, BigDecimal price, String orderInformation, String openid) {
         this.orderId = orderId;
-        this.fee = fee;
+        this.price = price;
         this.orderInformation = orderInformation;
         this.openid = openid;
     }
@@ -23,12 +23,12 @@ public class WechatOrder {
         this.orderId = orderId;
     }
 
-    public BigDecimal getFee() {
-        return fee;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setFee(BigDecimal fee) {
-        this.fee = fee;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public String getOrderInformation() {

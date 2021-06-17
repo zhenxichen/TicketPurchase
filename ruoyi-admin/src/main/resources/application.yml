@@ -126,7 +126,7 @@ xss:
 #微信支付
 wx:
   pay:
-    appId: #微信公众号或者小程序等的appid
+    appId: wxe03c2c6a9c477ca1 #微信公众号或者小程序等的appid
     mchId: 1585154951 #微信支付商户号
     mchKey: cVubiAxHJzw5TpMei5lMELZT19WF5jeu #微信支付商户密钥
     keyPath: classpath:apiclient_cert_dev.p12 # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
