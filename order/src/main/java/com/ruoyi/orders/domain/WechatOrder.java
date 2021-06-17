@@ -4,11 +4,14 @@ import java.math.BigDecimal;
 
 public class WechatOrder {
     private String orderId;
-    private BigDecimal price;
+    private double price;
     private String orderInformation;
     private String openid;
 
-    public WechatOrder(String orderId, BigDecimal price, String orderInformation, String openid) {
+    public WechatOrder() {
+    }
+
+    public WechatOrder(String orderId, double price, String orderInformation, String openid) {
         this.orderId = orderId;
         this.price = price;
         this.orderInformation = orderInformation;
@@ -23,11 +26,11 @@ public class WechatOrder {
         this.orderId = orderId;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
