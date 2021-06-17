@@ -192,7 +192,8 @@
             v-model="ticketForm.busDate"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="请选择发车日期" />
+            placeholder="请选择发车日期" 
+            @change="updateTicketInfo"/>
         </el-form-item>
         <el-form-item label="座位" prop="seat">
           <el-input-number v-model="ticketForm.seat" />
@@ -237,7 +238,7 @@
 </template>
 
 <script>
-import { listBus, getBus, delBus, addBus, updateBus, exportBus, listStation, setTicket, driverList } from "@/api/bus/bus";
+import { listBus, getBus, delBus, addBus, updateBus, exportBus, listStation, setTicket, driverList, getTicket } from "@/api/bus/bus";
 
 export default {
   name: "Bus",
@@ -505,6 +506,27 @@ export default {
       const that = this;
       driverList().then(response => {
         that.driver = response.data;
+      })
+    },
+    // 更新车票量信息
+    updateTicketInfo() {
+      const that = this;
+      const params = {
+        busId: this.ticketForm.busId,
+        date: this.ticketForm.busDate
+      };
+      getTicket(params).then(res => {
+        console.log(res);
+        if (res.data !== null) {
+          that.ticketForm.seat = res.data.seat;
+          that.ticketForm.employeeTickets = res.data.employeeTickets;
+          that.ticketForm.normalTickets = res.data.normalTickets;
+          that.ticketForm.employeeTicketsRemain = res.data.employeeTicketsRemain;
+          that.ticketForm.normalTicketsRemain = res.data.normalTicketsRemain;
+          that.ticketForm.employeePrice = res.data.employeePrice;
+          that.ticketForm.normalPrice = res.data.normalPrice;
+          that.ticketForm.driver = res.data.driver;
+        }
       })
     }
   }

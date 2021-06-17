@@ -123,6 +123,7 @@ xss:
   excludes: /system/notice/*
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
 #微信支付
 wx:
   pay:
@@ -131,3 +132,33 @@ wx:
     mchKey: cVubiAxHJzw5TpMei5lMELZT19WF5jeu #微信支付商户密钥
     keyPath: classpath:apiclient_cert_dev.p12 # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
     tradeType: JSAPI  #JSAPI--公众号支付    NATIVE--原生扫码支付   APP--app支付
+
+# RocketMQ
+rocketmq:
+  # 生产者
+  producer:
+    isOnOff: on
+    # group名称
+    groupName: ticket
+    # name server地址
+    namesrvAddr: 49.232.26.148:9876
+    # 最大消息体大小：4M
+    maxMessageSize: 4096
+    # timeout设置为3s
+    sendMsgTimeout: 3000
+    # 重试次数：2次
+    retryTimesWhenSendFailed: 2
+  # 消费者
+  consumer:
+    isOnOff: on
+    # group名称
+    groupName: ticket
+    # name server地址
+    namesrvAddr: 49.232.26.148:9876
+    # 订阅的topic
+    topics: order-pay~*;
+    # 消费线程数
+    consumeThreadMin: 5
+    consumeThreadMax: 64
+    # 每次消费信息的条数
+    consumeMessageBatchMaxSize: 1
