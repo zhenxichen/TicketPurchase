@@ -42,21 +42,21 @@ public class WeChatPayController {
      * 将构建好的支付参数返回到前端，前端调起微信支付
      * @return
      */
-    @PostMapping(value = "payOrderWechat")
-    public AjaxResult weChatPay(HttpServletRequest request, @RequestBody WechatOrder wecharOrder) {
+    @PostMapping("/payOrderWechat")
+    public AjaxResult weChatPay(HttpServletRequest request, @RequestBody WechatOrder wechatOrder) {
 
         /**
          * 处理内部业务，校验订单等
          */
         final WxPayUnifiedOrderRequest wxPayUnifiedOrderRequest = WxPayUnifiedOrderRequest.newBuilder()
                 //调起支付的人的 openId
-                .openid(wecharOrder.getOpenid())
+                .openid(wechatOrder.getOpenid())
                 //订单编号
-                .outTradeNo(wecharOrder.getOrderId())
+                .outTradeNo(wechatOrder.getOrderId())
                 //订单金额
-                .totalFee(yuanToFee(wecharOrder.getPrice()))
+                .totalFee(new Integer((int)wechatOrder.getPrice()*100))
                 //商品描述
-                .body(wecharOrder.getOrderInformation())
+                .body(wechatOrder.getOrderInformation())
                 //获取本地IP
                 .spbillCreateIp(InetAddress.getLoopbackAddress().getHostAddress())
                 //回调的 URL 地址
