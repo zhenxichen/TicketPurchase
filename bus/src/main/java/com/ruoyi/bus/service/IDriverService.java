@@ -63,6 +63,7 @@ public interface IDriverService {
 
     /**
      * 将订单状态修改为已核验
+     * 并通知前端已进行校验
      *
      * @param orderId 订单号
      */

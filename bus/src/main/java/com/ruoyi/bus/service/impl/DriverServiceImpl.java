@@ -8,6 +8,7 @@ import com.ruoyi.bus.domain.vo.VerifyRecordVO;
 import com.ruoyi.bus.mapper.DriverMapper;
 import com.ruoyi.bus.service.IDriverService;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.server.WebSocketServer;
 import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -128,11 +129,14 @@ public class DriverServiceImpl implements IDriverService {
 
     /**
      * 将订单状态修改为已核验
+     * 并通知前端已进行校验
      *
      * @param orderId 订单号
      */
     @Override
     public void verifyTicket(String orderId) {
         driverMapper.updateStatusToVerified(orderId);
+        WebSocketServer.sendMessage("verified", orderId);
+        WebSocketServer.closeSession(orderId);
     }
 }
