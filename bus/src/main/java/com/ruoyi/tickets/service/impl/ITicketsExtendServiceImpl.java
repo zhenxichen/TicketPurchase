@@ -129,4 +129,30 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
         }
         return true;
     }
+
+    @Override
+    public boolean refundOrder(String orderId) {
+
+        Orders order=ordersMapper.selectOrdersById(orderId);
+        if (order.getStatus().equals("0")){
+            order.setStatus("3");
+        }else if(order.getStatus().equals("1")){
+            order.setStatus("3");
+
+            UserInfo userinfo=iuserInfoService.selectUserInfoById(order.getUserId());
+            if (userinfo==null){
+                return false;
+            }
+            userinfo.setBalance(userinfo.getBalance()+order.getPrice());
+            if(iuserInfoService.updateUserInfo(userinfo)==0){
+                return false;
+            }
+        }else{
+            return false;
+        }
+        if(ordersMapper.updateOrders(order)==0){
+            return false;
+        }
+        return true;
+    }
 }

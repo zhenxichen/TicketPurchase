@@ -38,4 +38,12 @@ public interface ITicketsExtendService {
      * @return
      */
     public boolean payOrder(String orderId,Long userId,Long userRole);
+
+    /**
+     * 退票
+     * @param orderId
+     * @return
+     */
+    public boolean refundOrder(String orderId);
+
 }

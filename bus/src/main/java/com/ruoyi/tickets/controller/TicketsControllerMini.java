@@ -118,5 +118,20 @@ public class TicketsControllerMini
         }
     }
 
+    /**
+     * 退票
+     * @return
+     */
+    @RepeatSubmit
+    @GetMapping("/refundTicket")
+    public AjaxResult refundOrder(HttpServletRequest request,@RequestParam("orderId") String orderId) {
+        boolean isRefundSuccess=ticketsService.refundOrder(orderId);
+        if (isRefundSuccess){
+            return AjaxResult.success();
+        }else{
+            return AjaxResult.error("退票失败");
+        }
+    }
+
 }
 
