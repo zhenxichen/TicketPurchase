@@ -20,20 +20,14 @@
         />
       </el-form-item>
       <el-form-item label="订单状态" prop="status">
-        <el-input
-          v-model="queryParams.status"
-          placeholder="0初始,1待核,2已核,3关闭"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-        <!--<el-select v-model="form.field101" placeholder="请选择订单状态" clearable :style="{width: '100%'}">
-          <el-option v-for="(item, index) in field101Options"
-                     :key="index"
-                     :label="item.label"
-                     :value="item.value"
-                     :disabled="item.disabled"></el-option>
-        </el-select>-->
+        <el-select v-model="queryParams.status" placeholder="请选择订单状态">
+          <el-option
+            v-for="item in statusList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="车次" prop="bus">
         <el-input
@@ -109,7 +103,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="订单号" align="center" prop="orderId" />
       <el-table-column label="用户ID" align="center" prop="userId" />
-      <el-table-column label="订单状态" align="center" prop="status" />
+      <el-table-column label="订单状态" :formatter="statusFormat" align="center" prop="status" />
       <el-table-column label="车次" align="center" prop="bus" />
       <el-table-column label="日期" align="center" prop="date" width="180">
         <template slot-scope="scope">
@@ -156,11 +150,14 @@
                     :disabled="disableUserId"/>
         </el-form-item>
         <el-form-item label="订单状态" prop="status">
-          <el-input
-              v-model="form.status"
-              placeholder="0未知,1待核销,2已核销,3已关闭"
-              size="large"
-          />
+          <el-select v-model="form.status" placeholder="请选择订单状态">
+            <el-option
+              v-for="item in statusList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="车次" prop="bus">
           <el-input v-model="form.bus" placeholder="请输入车次"
@@ -251,7 +248,7 @@ export default {
         ],
       },
       field101Options: [{
-        "label": "未知数",
+        "label": "未支付",
         "value": 0
       }, {
         "label": "待核销",
@@ -268,6 +265,18 @@ export default {
       disableUserId:false,
       disableBus:false,
       disableDate:false,
+      statusList: [
+        { label: '未支付', value: '0' },
+        { label: '待核销', value: '1' },
+        { label: '已核销', value: '2' },
+        { label: '已关闭', value: '3' }
+      ],
+      statusDict: {
+        '0': '未支付',
+        '1': '待核销',
+        '2': '已核销',
+        '3': '已关闭'
+      },
     };
   },
   created() {
@@ -390,6 +399,10 @@ export default {
           this.download(response.msg);
           this.exportLoading = false;
         })
+    },
+    // 转换订单状态显示格式
+    statusFormat(row, column) {
+      return this.statusDict[row.status];
     }
   }
 };
