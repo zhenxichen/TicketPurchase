@@ -93,4 +93,19 @@ public interface OrdersMapper
      * 将发车日期早于今日的所有未核销（状态为1）订单状态修改为3
      */
     int closeOrdersBeforeToday();
+
+    /**
+     * 检查订单是否已经支付
+     *
+     * @return 若返回值为0说明已支付或不存在该订单，否则说明未支付
+     */
+    int checkOrderIsPaid(String orderId);
+
+    /**
+     * 关闭订单
+     *
+     * @param orderId 订单号
+     * @return 修改的数据行数
+     */
+    int closeOrder(String orderId);
 }

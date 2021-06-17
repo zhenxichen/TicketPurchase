@@ -151,4 +151,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SET `status` = '3'
         WHERE `date` &lt; CURDATE() AND `status` = '1'
     </update>
+    
+    <select id="checkOrderIsPaid" parameterType="String" resultType="Integer">
+        SELECT COUNT(*)
+        FROM orders
+        WHERE order_id = #{orderId, jdbcType=VARCHAR}
+            AND `status` = '0'
+    </select>
+
+    <update id="closeOrder" parameterType="String">
+        UPDATE orders
+        SET `status` = '3'
+        WHERE order_id = #{orderId, jdbcType=VARCHAR}
+    </update>
 </mapper>
