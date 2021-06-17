@@ -7,6 +7,7 @@ import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.util.SignUtils;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.orders.domain.ReturnPayInfoVO;
 import com.ruoyi.orders.domain.WechatOrder;
 import com.ruoyi.orders.service.IOrdersExtendService;
@@ -42,7 +43,7 @@ public class WeChatPayController {
      * @return
      */
     @PostMapping(value = "payOrderWechat")
-    public ReturnPayInfoVO weChatPay(HttpServletRequest request, @RequestBody WechatOrder wecharOrder) {
+    public AjaxResult weChatPay(HttpServletRequest request, @RequestBody WechatOrder wecharOrder) {
 
         /**
          * 处理内部业务，校验订单等
@@ -67,6 +68,7 @@ public class WeChatPayController {
         } catch (WxPayException e) {
             e.printStackTrace();
             throw new RuntimeException("微信支付调起失败！");
+
         }
         //组合参数构建支付
         Map<String, String> paySignInfo = new HashMap<>(5);
@@ -87,7 +89,10 @@ public class WeChatPayController {
         returnPayInfoVO.setPrepayId(wxPayUnifiedOrderResult.getPrepayId());
         returnPayInfoVO.setTimeStamp(timeStamp);
 
-        return returnPayInfoVO;
+        AjaxResult result = AjaxResult.success();
+        result.put("data", returnPayInfoVO);
+
+        return result;
     }
 
     /**
