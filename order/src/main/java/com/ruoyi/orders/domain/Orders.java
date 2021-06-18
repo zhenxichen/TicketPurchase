@@ -60,6 +60,10 @@ public class Orders extends BaseEntity {
     @Excel(name = "价格")
     private Long price;
 
+    /** 类型（0普通票，1员工票） */
+    @Excel(name = "类型", readConverterExp = "0=普通票，1员工票")
+    private Integer type;
+
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
@@ -116,6 +120,14 @@ public class Orders extends BaseEntity {
         this.price = price;
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -127,6 +139,7 @@ public class Orders extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("verifyTime", getVerifyTime())
                 .append("price", getPrice())
+                .append("type", getType())
                 .toString();
     }
 }
