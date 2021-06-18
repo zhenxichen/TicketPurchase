@@ -13,7 +13,9 @@ import com.ruoyi.system.service.IUserInfoService;
 import com.ruoyi.tickets.domain.DTO.TicketDTO;
 import com.ruoyi.tickets.domain.TicketOrder;
 import com.ruoyi.tickets.domain.Tickets;
+import com.ruoyi.tickets.domain.dao.BusIdAndDateDAO;
 import com.ruoyi.tickets.mapper.TicketsExtendMapper;
+import com.ruoyi.tickets.mapper.TicketsManageMapper;
 import com.ruoyi.tickets.mapper.TicketsMapper;
 import com.ruoyi.tickets.service.ITicketsExtendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +47,10 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
     private IStationExtendService stationService;
 
     @Autowired
-    private IUserInfoService iuserInfoService;
+    private TicketsManageMapper ticketsManageMapper;
 
+    @Autowired
+    private IUserInfoService iuserInfoService;
     @Autowired
     private IBusService iBusService;
 
@@ -87,9 +91,11 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
         orders.setStatus("0");
         orders.setCreateTime(new Date());
 
+
         //购票
         if (userRole==2){
             if(normalTicketsRemain>0){
+                orders.setType(0);
                 orders.setPrice(ticket.getNormalPrice());
                 ordersMapper.insertOrders(orders);
                 ticket.setNormalTicketsRemain(ticket.getNormalTicketsRemain()-1);
@@ -100,9 +106,11 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
         }else{
             orders.setPrice(ticket.getEmployeePrice());
             if(employeeTicketsRemain>0){//优先买员工篇
+                orders.setType(1);
                 ordersMapper.insertOrders(orders);
                 ticket.setEmployeeTicketsRemain(ticket.getEmployeeTicketsRemain()-1);
             }else if(normalTicketsRemain>0){//没有员工篇买普通票，但是价格还是员工价
+                orders.setType(0);
                 ordersMapper.insertOrders(orders);
                 ticket.setNormalTicketsRemain(ticket.getNormalTicketsRemain()-1);
             }else{
@@ -150,7 +158,13 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
         }else{
             return false;
         }
-        if(ordersMapper.updateOrders(order)==0){
+        Tickets tickets=ticketsManageMapper.selectTicketsByIdAndDate(new BusIdAndDateDAO(order.getBus(),order.getDate()));
+        if (order.getType()==1){
+            tickets.setEmployeeTicketsRemain(tickets.getEmployeeTicketsRemain()+1);
+        }else{
+            tickets.setNormalTicketsRemain(tickets.getNormalTicketsRemain()+1);
+        }
+        if(ordersMapper.updateOrders(order)==0||ticketsMapper.updateTickets(tickets)==0){
             return false;
         }
         return true;
