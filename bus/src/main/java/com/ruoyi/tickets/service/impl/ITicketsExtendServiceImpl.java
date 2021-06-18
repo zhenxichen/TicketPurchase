@@ -1,26 +1,32 @@
 package com.ruoyi.tickets.service.impl;
 
 import com.ruoyi.bus.service.IBusService;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.framework.web.service.TokenService;
-import com.ruoyi.orders.domain.Orders;
 import com.ruoyi.orders.mapper.OrdersMapper;
 import com.ruoyi.orders.util.OrderIdCreator;
+import com.ruoyi.orders.domain.Orders;
 import com.ruoyi.station.service.IStationExtendService;
 import com.ruoyi.system.domain.UserInfo;
 import com.ruoyi.system.service.IUserInfoService;
 import com.ruoyi.tickets.domain.DTO.TicketDTO;
 import com.ruoyi.tickets.domain.TicketOrder;
 import com.ruoyi.tickets.domain.Tickets;
+import com.ruoyi.tickets.domain.dao.BusIdAndDateDAO;
 import com.ruoyi.tickets.mapper.TicketsExtendMapper;
+import com.ruoyi.tickets.mapper.TicketsManageMapper;
 import com.ruoyi.tickets.mapper.TicketsMapper;
 import com.ruoyi.tickets.service.ITicketsExtendService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ITicketsExtendServiceImpl implements ITicketsExtendService {
@@ -33,12 +39,14 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
 
     @Autowired
     private OrdersMapper ordersMapper;
-
     @Autowired
     private TokenService tokenService;
 
     @Autowired
     private IStationExtendService stationService;
+
+    @Autowired
+    private TicketsManageMapper ticketsManageMapper;
 
     @Autowired
     private IUserInfoService iuserInfoService;
@@ -103,6 +111,7 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
         orders.setUserId(userId);
         orders.setStatus("0");
         orders.setCreateTime(new Date());
+
 
         //购票
         if (userRole == 2) {
@@ -179,7 +188,13 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
         } else {
             return false;
         }
-        if (ordersMapper.updateOrders(order) == 0) {
+        Tickets tickets=ticketsManageMapper.selectTicketsByIdAndDate(new BusIdAndDateDAO(order.getBus(),order.getDate()));
+        if (order.getType()==1){
+            tickets.setEmployeeTicketsRemain(tickets.getEmployeeTicketsRemain()+1);
+        }else{
+            tickets.setNormalTicketsRemain(tickets.getNormalTicketsRemain()+1);
+        }
+        if(ordersMapper.updateOrders(order)==0||ticketsMapper.updateTickets(tickets)==0){
             return false;
         }
         return true;

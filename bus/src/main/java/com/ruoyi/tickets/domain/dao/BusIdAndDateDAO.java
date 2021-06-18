@@ -16,6 +16,14 @@ public class BusIdAndDateDAO {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date busDate;       // 日期
 
+    public BusIdAndDateDAO() {
+    }
+
+    public BusIdAndDateDAO(String busId, Date busDate) {
+        this.busId = busId;
+        this.busDate = busDate;
+    }
+
     public String getBusId() {
         return busId;
     }
