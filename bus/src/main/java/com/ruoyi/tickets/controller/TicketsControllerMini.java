@@ -35,16 +35,12 @@ public class TicketsControllerMini
 {
     @Autowired
     private ITicketsExtendService ticketsService;
+
     @Autowired
     private TokenService tokenService;
+
     /**
      * 返回符合对应查询条件的车票
-     * @param start 出发车站id
-     * @param dest
-     * @param date
-     * @param ticketType
-     * @param date2
-     * @return
      */
     @GetMapping("/bus/list")
     public AjaxResult ticketList(@RequestParam("start") String start,

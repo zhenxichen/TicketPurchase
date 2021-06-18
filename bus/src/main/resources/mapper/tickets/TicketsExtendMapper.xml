@@ -62,4 +62,11 @@
         </trim>
         where bus_id = #{busId} and bus_date=#{busDate}
     </update>
+
+    <update id="consumeNormalTicket" parameterType="BusIdAndDateDAO">
+        UPDATE tickets
+        SET normal_tickets = normal_tickets - 1
+        WHERE bus_id = #{busId, jdbcType=VARCHAR}
+            AND bus_date = #{busDate, jdbcType=VARCHAR}
+    </update>
 </mapper>
