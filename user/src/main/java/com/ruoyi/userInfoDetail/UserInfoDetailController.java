@@ -1,12 +1,10 @@
 package com.ruoyi.userInfoDetail;
 
 import com.ruoyi.common.annotation.RepeatSubmit;
-import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
-
 import com.ruoyi.common.exception.user.PhoneNumberNotUniqueException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -18,7 +16,6 @@ import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.service.IUserInfoService;
 import com.ruoyi.user.domain.dto.UserModifyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -28,8 +25,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/ticketMiniProgram")
-public class UserInfoDetailController extends BaseController
-{
+public class UserInfoDetailController extends BaseController {
     @Autowired
     private ISysUserService userService;
 
@@ -49,12 +45,12 @@ public class UserInfoDetailController extends BaseController
     public Object add() throws Exception {
         return "index";
     }
+
     /**
      * 获取用户详细信息
      */
     @GetMapping("/userInfo")
-    public AjaxResult userInfo()
-    {
+    public AjaxResult userInfo() {
         String oldUserName = SecurityUtils.getUsername();
         SysUser user = userService.selectUserByUserName(oldUserName);  //初始表用户信息
         Long userID = user.getUserId();  //userID
@@ -63,15 +59,15 @@ public class UserInfoDetailController extends BaseController
         String phoneNumber = user.getPhonenumber();  //phoneNumber
         Set<String> userType = roleService.selectRolePermissionByUserId(userID);
 //        String type = userType.iterator().next();   //userType
-        HashSet userTypeChinese=new HashSet<>();
+        HashSet userTypeChinese = new HashSet<>();
         for (String str : userType) {
-            if(str.equals("driver"))
+            if (str.equals("driver"))
                 userTypeChinese.add("司机");
-            if(str.equals("employee"))
+            if (str.equals("employee"))
                 userTypeChinese.add("员工");
-            if(str.equals("common"))
+            if (str.equals("common"))
                 userTypeChinese.add("普通角色");
-            if(str.equals("admin"))
+            if (str.equals("admin"))
                 userTypeChinese.add("超级管理员");
         }
         UserInfo userInfo = iuserInfoService.selectUserInfoById(userID);  //新增表中的用户信息
@@ -95,8 +91,7 @@ public class UserInfoDetailController extends BaseController
      */
     @RepeatSubmit
     @PostMapping("/userInfo")
-    public AjaxResult userInfoModify(@RequestBody UserModifyDTO userModifyDTO)
-    {
+    public AjaxResult userInfoModify(@RequestBody UserModifyDTO userModifyDTO) {
         String oldUserName = SecurityUtils.getUsername();
         SysUser oldUser = userService.selectUserByUserName(oldUserName);
         Long userId = oldUser.getUserId();
@@ -131,8 +126,7 @@ public class UserInfoDetailController extends BaseController
      * 获取用户余额
      */
     @GetMapping("/userInfo/wallet")
-    public AjaxResult getUserBalance()
-    {
+    public AjaxResult getUserBalance() {
         String oldUserName = SecurityUtils.getUsername();
         SysUser oldUser = userService.selectUserByUserName(oldUserName);
         Long userId = oldUser.getUserId();
@@ -150,13 +144,12 @@ public class UserInfoDetailController extends BaseController
      */
     @RepeatSubmit
     @PostMapping("/userInfo/wallet")
-    public AjaxResult addUserBalance(@RequestParam("balance")Long addBalance)
-    {
+    public AjaxResult addUserBalance(@RequestParam("balance") Long addBalance) {
         String oldUserName = SecurityUtils.getUsername();
         SysUser oldUser = userService.selectUserByUserName(oldUserName);
         Long userId = oldUser.getUserId();
         UserInfo userInfo = iuserInfoService.selectUserInfoById(userId);
-        userInfo.setBalance(addBalance+userInfo.getBalance());
+        userInfo.setBalance(addBalance + userInfo.getBalance());
         iuserInfoService.updateUserInfo(userInfo);
         Long balance = userInfo.getBalance();
         Map<String, Object> dataMap = new HashMap<String, Object>();
@@ -166,8 +159,18 @@ public class UserInfoDetailController extends BaseController
         return ajax;
     }
 
+    /**
+     * 绑定openid
+     * @param openId 绑定openid
+     * @return
+     */
     @GetMapping("getOpenid")
-    public AjaxResult getOpenid(@RequestParam("openId")String openId){
+    public AjaxResult getOpenid(@RequestParam("openId") String openId) {
+        if (iuserInfoService.selectUsernameByOpenId(openId) != null) {
+            AjaxResult ajax = AjaxResult.error();
+            ajax.put("result", "操作失败，该openid已绑定其他用户");
+            return ajax;
+        }
         String userName = SecurityUtils.getUsername();
         SysUser user = userService.selectUserByUserName(userName);  //初始表用户信息
         Long userID = user.getUserId();  //userID
