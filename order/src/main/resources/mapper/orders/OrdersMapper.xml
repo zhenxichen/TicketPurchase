@@ -26,6 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="dest"    column="dest"    />
         <result property="price"    column="price"    />
         <result property="ticketStatus"    column="status"    />
+        <result property="createTime"   column="create_time"    />
     </resultMap>
 
     <sql id="selectOrdersVo">
@@ -36,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT
             O.order_id, O.bus, O.`date`, B.start_time, B.end_time,
             S.station_name as `start`, D.station_name as `dest`,
-            O.price as price, O.`status` as `status`
+            O.price as price, O.`status` as `status`, O.create_time as `create_time`
         FROM orders O
         JOIN bus B ON O.bus = B.bus_id
         JOIN station S ON B.`start` = S.station_id
@@ -59,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT
             O.order_id, O.bus, O.`date`, B.start_time, B.end_time,
             S.station_name as `start`, D.station_name as `dest`,
-            O.price as price, O.`status` as `status`
+            O.price as price, O.`status` as `status`, O.create_time as `create_time`
         FROM orders O
         JOIN bus B ON O.bus = B.bus_id
         JOIN station S ON B.`start` = S.station_id

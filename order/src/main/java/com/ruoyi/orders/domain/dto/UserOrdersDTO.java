@@ -25,7 +25,8 @@ public class UserOrdersDTO {
     private double price;           //车票价格
     private String ticketStatus;    //订单状态
 
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date createTime;        // 订单创建时间
 
     public String getOrderID() {
         return orderID;
@@ -97,5 +98,13 @@ public class UserOrdersDTO {
 
     public void setTicketStatus(String ticketStatus) {
         this.ticketStatus = ticketStatus;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }
