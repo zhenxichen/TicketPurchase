@@ -15,12 +15,14 @@
 + [Redis](https://redis.io/)
 + [RocketMQ](https://rocketmq.apache.org/)
 + WebSocket
-<br>
+
 ### 前端（管理端）
 + [Vue.js](https://vuejs.org/)
 + [element-ui](https://element.eleme.cn/)
+
 ### 前端（客户端）
 + [uni-app](https://uniapp.dcloud.io/api/README)
+
 ## 其他说明
 + 客户端通过小程序实现，并未部署到服务端，且源代码并非本组开发，因此代码并不在本项目中。
 + 如需访问后端接口，需要先访问登录接口获取token，并添加到header中
