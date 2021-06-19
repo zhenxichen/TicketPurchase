@@ -108,4 +108,12 @@ public interface OrdersMapper
      * @return 修改的数据行数
      */
     int closeOrder(String orderId);
+
+    /**
+     * 关闭员工订单
+     *
+     * @param orderId 订单号
+     * @return
+     */
+    int closeEmployeeOrder(String orderId);
 }

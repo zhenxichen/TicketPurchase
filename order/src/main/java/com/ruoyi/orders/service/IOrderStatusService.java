@@ -1,5 +1,7 @@
 package com.ruoyi.orders.service;
 
+import com.ruoyi.orders.domain.Orders;
+
 /**
  * 管理订单状态的服务层接口
  *
@@ -18,7 +20,7 @@ public interface IOrderStatusService {
     /**
      * 关闭订单
      *
-     * @param orderId 订单号
+     * @param orders 订单信息
      */
-    int closeOrder(String orderId);
+    int closeOrder(Orders orders);
 }

@@ -25,6 +25,8 @@ public class UserOrdersDTO {
     private double price;           //车票价格
     private String ticketStatus;    //订单状态
 
+
+
     public String getOrderID() {
         return orderID;
     }

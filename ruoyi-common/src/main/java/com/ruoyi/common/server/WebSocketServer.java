@@ -94,7 +94,9 @@ public class WebSocketServer {
      */
     public static void sendMessage(String message, String sid) {
         WebSocketServer server = webSockets.get(sid);       // 获取对应的server
-        server.send(message);
+        if (server != null) {
+            server.send(message);
+        }
     }
 
     /**
@@ -103,7 +105,9 @@ public class WebSocketServer {
      */
     public static void closeSession(String sid) {
         WebSocketServer server = webSockets.get(sid);
-        server.close();
+        if (server != null) {
+            server.close();
+        }
     }
 
 }

@@ -1,7 +1,10 @@
 package com.ruoyi.orders.listener;
 
 import com.ruoyi.orders.constant.MQConstants;
+import com.ruoyi.orders.constant.OrderStatusConstants;
+import com.ruoyi.orders.domain.Orders;
 import com.ruoyi.orders.service.IOrderStatusService;
+import com.ruoyi.orders.service.IOrdersService;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
@@ -26,7 +29,10 @@ public class MessageListenerImpl implements MessageListenerConcurrently {
     private static final Logger log = LoggerFactory.getLogger(MessageListenerImpl.class);
 
     @Autowired
-    IOrderStatusService orderStatusService;
+    private IOrderStatusService orderStatusService;
+
+    @Autowired
+    private IOrdersService ordersService;
 
     @Override
     public ConsumeConcurrentlyStatus consumeMessage(
@@ -36,10 +42,12 @@ public class MessageListenerImpl implements MessageListenerConcurrently {
         }
         MessageExt message = list.get(0);
         String msg = new String(message.getBody());
+        log.info("Consume a message." + msg);
         switch (message.getTags()) {
             case MQConstants.ORDER_TIME_OUT_TAG: {
-                if (!orderStatusService.isOrderPay(msg)) {
-                    orderStatusService.closeOrder(msg);
+                Orders order = ordersService.selectOrdersById(msg);
+                if (order.getStatus().equals(OrderStatusConstants.UNPAID)) {
+                    orderStatusService.closeOrder(order);
                 }
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }

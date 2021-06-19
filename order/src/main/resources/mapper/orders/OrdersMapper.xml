@@ -166,8 +166,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <update id="closeOrder" parameterType="String">
-        UPDATE orders
-        SET `status` = '3'
-        WHERE order_id = #{orderId, jdbcType=VARCHAR}
+        UPDATE orders O
+        INNER JOIN tickets T
+        ON O.bus = T.bus_id AND O.`date` = T.bus_date
+        SET O.`status` = 3, T.normal_tickets_remain = T.normal_tickets_remain + 1
+        WHERE O.order_id = #{orderId, jdbcType=VARCHAR}
+    </update>
+
+    <update id="closeEmployeeOrder" parameterType="String">
+        UPDATE orders O
+        INNER JOIN tickets T
+        ON O.bus = T.bus_id AND O.`date` = T.bus_date
+        SET O.`status` = 3, T.employee_tickets_remain = T.employee_tickets_remain + 1
+        WHERE O.order_id = #{orderId, jdbcType=VARCHAR}
     </update>
 </mapper>

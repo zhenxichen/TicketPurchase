@@ -1,5 +1,6 @@
 package com.ruoyi.orders.config;
 
+import com.ruoyi.orders.constant.MQConstants;
 import com.ruoyi.orders.listener.MessageListenerImpl;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.slf4j.Logger;
@@ -52,7 +53,7 @@ public class MQConsumerConfig {
         consumer.setConsumeMessageBatchMaxSize(consumeMessageBatchMaxSize);
         consumer.registerMessageListener(messageListener);
         try {
-            consumer.subscribe(topics, "*");
+            consumer.subscribe(MQConstants.ORDER_TOPIC, "*");
             consumer.start();
             log.info("Consumer is started.");
         } catch (Exception e) {

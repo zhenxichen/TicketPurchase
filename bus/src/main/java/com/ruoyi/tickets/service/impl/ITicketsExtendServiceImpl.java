@@ -3,6 +3,7 @@ package com.ruoyi.tickets.service.impl;
 import com.ruoyi.bus.service.IBusService;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.orders.constant.MQConstants;
 import com.ruoyi.orders.mapper.OrdersMapper;
 import com.ruoyi.orders.util.OrderIdCreator;
 import com.ruoyi.orders.domain.Orders;
@@ -17,6 +18,12 @@ import com.ruoyi.tickets.mapper.TicketsExtendMapper;
 import com.ruoyi.tickets.mapper.TicketsManageMapper;
 import com.ruoyi.tickets.mapper.TicketsMapper;
 import com.ruoyi.tickets.service.ITicketsExtendService;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendCallback;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -30,6 +37,8 @@ import java.util.Map;
 
 @Service
 public class ITicketsExtendServiceImpl implements ITicketsExtendService {
+
+    private static final Logger log = LoggerFactory.getLogger(ITicketsExtendServiceImpl.class);
 
     @Autowired
     private TicketsExtendMapper ticketsExtendMapper;
@@ -53,6 +62,9 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
 
     @Autowired
     private IBusService iBusService;
+
+    @Autowired
+    private DefaultMQProducer producer;
 
     private static final int NORMAL_TICKET = 0;
 
@@ -138,8 +150,30 @@ public class ITicketsExtendServiceImpl implements ITicketsExtendService {
                 return null;
             }
         }
-        //更新票余量
+        // 更新票余量
         ticketsExtendMapper.updateTickets(ticket);
+        // 发送延迟消息
+        Message msg = new Message();
+        msg.setTopic(MQConstants.ORDER_TOPIC);
+        msg.setTags(MQConstants.ORDER_TIME_OUT_TAG);
+        msg.setBody(orderId.getBytes());
+        msg.setDelayTimeLevel(MQConstants.DELAY_LEVEL_OF_10MIN_DELAY);
+        try {
+            producer.send(msg, new SendCallback() {
+                @Override
+                public void onSuccess(SendResult sendResult) {
+                    log.info("Produce a message.");
+                }
+
+                @Override
+                public void onException(Throwable throwable) {
+                    log.error("Failed to produce message.", throwable);
+                }
+            });
+
+        } catch (Exception e) {
+            log.error("Failed to produce message.", e);
+        }
         return orderId;
     }
 

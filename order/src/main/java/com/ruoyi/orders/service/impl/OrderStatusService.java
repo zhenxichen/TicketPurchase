@@ -1,5 +1,7 @@
 package com.ruoyi.orders.service.impl;
 
+import com.ruoyi.orders.constant.OrderStatusConstants;
+import com.ruoyi.orders.domain.Orders;
 import com.ruoyi.orders.mapper.OrdersMapper;
 import com.ruoyi.orders.service.IOrderStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +30,14 @@ public class OrderStatusService implements IOrderStatusService {
     /**
      * 关闭订单
      *
-     * @param orderId 订单号
+     * @param order 订单号
      */
     @Override
-    public int closeOrder(String orderId) {
+    public int closeOrder(Orders order) {
+        String orderId = order.getOrderId();
+        if (order.getType() == OrderStatusConstants.EMPLOYEE) {
+            return ordersMapper.closeEmployeeOrder(orderId);
+        }
         return ordersMapper.closeOrder(orderId);
     }
 }

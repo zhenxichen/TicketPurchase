@@ -9,4 +9,10 @@ public class MQConstants {
 
     // 订单超时未支付的TAG
     public static final String ORDER_TIME_OUT_TAG = "order-overtime";
+
+    // 延迟一分钟对应的延迟级别
+    public static final int DELAY_LEVEL_OF_1MIN_DELAY = 5;
+
+    // 延时10分钟对应的延迟级别
+    public static final int DELAY_LEVEL_OF_10MIN_DELAY = 14;
 }

@@ -7,6 +7,7 @@ import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.server.WebSocketServer;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.tickets.domain.DTO.TicketDTO;
 import com.ruoyi.tickets.domain.TicketOrder;
@@ -107,6 +108,7 @@ public class TicketsControllerMini
         Long userId=user.getUserId();
         Long userRole=user.getRoles().get(0).getRoleId();
         boolean isPaySuccess=ticketsService.payOrder(orderId,userId,userRole);
+        WebSocketServer.sendMessage("paid", orderId);
         if (isPaySuccess){
             return AjaxResult.success();
         }else{
